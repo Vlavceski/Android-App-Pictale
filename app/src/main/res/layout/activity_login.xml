@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    tools:context=".LoginActivity"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
+        android:layout_gravity="center"
+        android:textSize="40sp"
+        android:layout_marginBottom="100dp"
+        />
+
+    <EditText
+        android:id="@+id/email_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+    <EditText
+        android:id="@+id/password_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/txt_registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I don't have account"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        />
+
+</LinearLayout>
