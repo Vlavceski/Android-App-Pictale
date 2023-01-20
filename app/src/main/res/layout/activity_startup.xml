@@ -4,15 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartupActivity"
     android:orientation="vertical"
-    android:layout_gravity="center"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center"
+    android:background="@drawable/bckg"
+    tools:context=".StartupActivity"
+    android:padding="@android:dimen/app_icon_size"
     >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Pictale"
+        android:textStyle="italic"
+
+        android:textColor="@android:color/white"
+        android:textSize="@android:dimen/app_icon_size" />
 
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="GET STARTED" />
+        android:layout_gravity="center_horizontal"
+        android:text="GET STARTED"
+
+        />
+
+
+
 </LinearLayout>

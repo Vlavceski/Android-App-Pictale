@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_registration.*
 import pictale.mk.Data.User
 
@@ -29,6 +27,7 @@ class RegistrationActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
+        //Registration
         btn_registration.setOnClickListener {
             var firstName = firstName_registration.text.toString()
             var lastName = lastName_registration.text.toString()
@@ -69,8 +68,6 @@ class RegistrationActivity : AppCompatActivity() {
                             user.recordID=recordID;
                             dbRef.child(recordID).setValue(user).addOnCompleteListener {
                                 if(it.isSuccessful){
-                                    Toast.makeText(this, "Successfully", Toast.LENGTH_SHORT)
-                                        .show()
                                     finish()
                                     startActivity(Intent(this, HomeActivity::class.java))
                                 }

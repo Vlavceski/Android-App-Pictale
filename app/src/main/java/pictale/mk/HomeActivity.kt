@@ -22,9 +22,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     override fun onStart() {
         super.onStart()
