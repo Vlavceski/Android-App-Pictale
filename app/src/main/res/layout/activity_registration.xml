@@ -30,7 +30,7 @@
             android:id="@+id/firstName_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:inputType="text"
             />
 
         <TextView
@@ -42,7 +42,8 @@
             android:id="@+id/lastName_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center" />
+            android:inputType="text"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -52,8 +53,9 @@
         <EditText
             android:id="@+id/email_registration"
             android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
-            android:textAlignment="center"/>
+            />
 
 
         <TextView
@@ -65,7 +67,8 @@
             android:id="@+id/password_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center" />
+            android:inputType="textPassword"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -76,7 +79,8 @@
             android:id="@+id/cnfpassword_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center" />
+            android:inputType="textPassword"
+            />
 
         <Button
             android:id="@+id/btn_registration"
