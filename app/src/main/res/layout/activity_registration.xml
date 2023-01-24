@@ -19,12 +19,14 @@
             android:layout_height="wrap_content"
             android:padding="20dp"
             android:text="CREATE ACCOUNT"
-            android:textSize="25dp" />
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="First Name" />
+            android:text="First Name"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/firstName_registration"
@@ -36,58 +38,62 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last Name" />
+            android:text="Last Name"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/lastName_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            />
+            android:inputType="text"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email" />
+            android:text="Email"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/email_registration"
             android:layout_width="match_parent"
             android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
-            />
+            android:importantForAutofill="no" />
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password" />
+            android:text="Password"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/password_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            />
+            android:importantForAutofill="no" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirm Password" />
+            android:text="Confirm Password"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/cnfpassword_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            />
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/btn_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Sign UP" />
+            android:text="Sign UP"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/alreadyHaveAccount"
@@ -95,7 +101,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:inputType="text"
-            android:text="Already have account" />
+            android:text="Already have account"
+            tools:ignore="HardcodedText,TextViewEdits" />
 
 
     </LinearLayout>

@@ -3,34 +3,72 @@ package pictale.mk
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.toolbar.view.*
+import pictale.mk.fragments.AllEventsFragment
+import pictale.mk.fragments.FavEventsFragment
+import pictale.mk.fragments.HighlightsFragment
+import pictale.mk.fragments.MyEventsFragment
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var mytoolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         mAuth = FirebaseAuth.getInstance()
 
-        mytoolbar=findViewById(R.id.toolbar)
-        mytoolbar.setting_click.setOnClickListener {
-            startActivity(Intent(this,SettingActivity::class.java))
 
+        toolbar_click.setOnMenuItemClickListener{
+            when(it.itemId){
+
+                R.id.profile_menu -> startActivity(Intent(this,SettingActivity::class.java))
+                R.id.logout_menu -> logout()
+                else -> {true}
+            }
+            true
         }
-        setSupportActionBar(mytoolbar)
 
-
-        btn_logout.setOnClickListener {
-            mAuth.signOut()
-            updateUI(mAuth.currentUser)
+        replaceFragment(AllEventsFragment())
+        nav_click.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.all_events -> replaceFragment(AllEventsFragment())
+                R.id.my_events -> replaceFragment(MyEventsFragment())
+                R.id.fav_events -> replaceFragment(FavEventsFragment())
+                R.id.highlights -> replaceFragment(HighlightsFragment())
+                else -> {true}
+            }
+            true
         }
+
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frame, fragment)
+        transaction.commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.main,menu)
+        return true
+    }
+
+
+
+
+
+
+    private fun logout(){
+        mAuth.signOut()
+        updateUI(mAuth.currentUser)
     }
 
 
@@ -50,3 +88,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 }
+
+
+

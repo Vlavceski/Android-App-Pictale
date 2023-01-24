@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/all_events"
+        android:title="All Events"
+        android:icon="@drawable/ic_all_events"
+        />
+    <item
+        android:id="@+id/my_events"
+        android:title="My Events"
+        android:icon="@drawable/ic_my_events"
+        />
+    <item
+        android:id="@+id/fav_events"
+        android:title="Fav Events"
+        android:icon="@drawable/ic_fav_events"
+        />
+    <item
+        android:id="@+id/highlights"
+        android:title="Highlights"
+        android:icon="@drawable/ic_highlight"
+        />
+</menu>
