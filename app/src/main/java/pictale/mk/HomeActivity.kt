@@ -83,9 +83,9 @@ class HomeActivity : AppCompatActivity() {
             finish()
             startActivity(Intent(this,LoginActivity::class.java))
         }
-        else{
-            usernameTV.text="Welcome ${mAuth.currentUser!!.email}"
-        }
+//        else{
+//            usernameTV.text="Welcome ${mAuth.currentUser!!.email}"
+//        }
     }
 }
 

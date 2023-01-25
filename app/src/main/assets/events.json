@@ -1,0 +1,109 @@
+{
+  "events":[
+  {
+    "id": 1,
+    "name": "testEvent1",
+    "description": "testDescription",
+    "location": "Skopje",
+    "tags": [
+      "this is test #hashtag #1",
+      "this is #2 #hashtag test"
+    ],
+    "isPublic": false,
+    "dateCreated": [
+      2023,
+      1,
+      24,
+      19,
+      29,
+      28,
+      781000000
+    ],
+    "collaboration": "ROLE_ANYONE",
+    "usersList": [
+      {
+        "id": 1,
+        "firstName": "Ivana",
+        "lastName": "Praksa",
+        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+      }
+    ],
+    "createdBy": {
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }
+  },
+  {
+    "id": 2,
+    "name": "testEvent2",
+    "description": "testDescription",
+    "location": "Skopje",
+    "tags": [
+      "this is test #hashtag #1",
+      "this is #2 #hashtag test"
+    ],
+    "isPublic": false,
+    "dateCreated": [
+      2023,
+      1,
+      24,
+      19,
+      29,
+      28,
+      781000000
+    ],
+    "collaboration": "ROLE_ANYONE",
+    "usersList": [
+      {
+        "id": 1,
+        "firstName": "Ivana",
+        "lastName": "Praksa",
+        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+      }
+    ],
+    "createdBy": {
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }
+  },
+  {
+    "id": 3,
+    "name": "testEvent3",
+    "description": "testDescription",
+    "location": "Skopje",
+    "tags": [
+      "this is test #hashtag #1",
+      "this is #2 #hashtag test"
+    ],
+    "isPublic": false,
+    "dateCreated": [
+      2023,
+      1,
+      24,
+      19,
+      29,
+      28,
+      781000000
+    ],
+    "collaboration": "ROLE_ANYONE",
+    "usersList": [
+      {
+        "id": 1,
+        "firstName": "Ivana",
+        "lastName": "Praksa",
+        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+      }
+    ],
+    "createdBy": {
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }
+  }
+]
+}
