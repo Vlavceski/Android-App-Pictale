@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_registration.*
-import pictale.mk.Data.User
+import pictale.mk.data.User
 
 
 class RegistrationActivity : AppCompatActivity() {

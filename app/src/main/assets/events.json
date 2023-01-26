@@ -1,40 +1,36 @@
-{
-  "events":[
-  {
+[{
+  "id": 1,
+  "name": "testEvent1",
+  "description": "testDescription",
+  "location": "Skopje",
+  "tags": [
+    "this is test #hashtag #1",
+    "this is #2 #hashtag test"
+  ],
+  "isPublic": false,
+  "dateCreated": [
+    2023,
+    1,
+    24,
+    19,
+    29,
+    28,
+    781000000
+  ],
+  "collaboration": "ROLE_ANYONE",
+  "usersList": [{
     "id": 1,
-    "name": "testEvent1",
-    "description": "testDescription",
-    "location": "Skopje",
-    "tags": [
-      "this is test #hashtag #1",
-      "this is #2 #hashtag test"
-    ],
-    "isPublic": false,
-    "dateCreated": [
-      2023,
-      1,
-      24,
-      19,
-      29,
-      28,
-      781000000
-    ],
-    "collaboration": "ROLE_ANYONE",
-    "usersList": [
-      {
-        "id": 1,
-        "firstName": "Ivana",
-        "lastName": "Praksa",
-        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
-      }
-    ],
-    "createdBy": {
-      "id": 1,
-      "firstName": "Ivana",
-      "lastName": "Praksa",
-      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
-    }
-  },
+    "firstName": "Ivana",
+    "lastName": "Praksa",
+    "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+  }],
+  "createdBy": {
+    "id": 1,
+    "firstName": "Ivana",
+    "lastName": "Praksa",
+    "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+  }
+},
   {
     "id": 2,
     "name": "testEvent2",
@@ -55,14 +51,12 @@
       781000000
     ],
     "collaboration": "ROLE_ANYONE",
-    "usersList": [
-      {
-        "id": 1,
-        "firstName": "Ivana",
-        "lastName": "Praksa",
-        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
-      }
-    ],
+    "usersList": [{
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }],
     "createdBy": {
       "id": 1,
       "firstName": "Ivana",
@@ -90,14 +84,45 @@
       781000000
     ],
     "collaboration": "ROLE_ANYONE",
-    "usersList": [
-      {
-        "id": 1,
-        "firstName": "Ivana",
-        "lastName": "Praksa",
-        "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
-      }
+    "usersList": [{
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }],
+    "createdBy": {
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }
+  },
+  {
+    "id": 4,
+    "name": "testEvent4",
+    "description": "testDescription",
+    "location": "Skopje",
+    "tags": [
+      "this is test #hashtag #1",
+      "this is #2 #hashtag test"
     ],
+    "isPublic": false,
+    "dateCreated": [
+      2023,
+      1,
+      24,
+      19,
+      29,
+      28,
+      781000000
+    ],
+    "collaboration": "ROLE_ANYONE",
+    "usersList": [{
+      "id": 1,
+      "firstName": "Ivana",
+      "lastName": "Praksa",
+      "pictureUrl": "https://lh3.googleusercontent.com/a/AEdFTp543Y2ycFKidwUA9DrKC4mkrNxIaF0o43uGExSW=s96-c"
+    }],
     "createdBy": {
       "id": 1,
       "firstName": "Ivana",
@@ -106,4 +131,3 @@
     }
   }
 ]
-}

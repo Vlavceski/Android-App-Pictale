@@ -1,56 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="15dp"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    android:layout_height="wrap_content">
 
-    <LinearLayout
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+      <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#A14646"
-        android:padding="12dp"
-        >
-        <LinearLayout
+          android:id="@+id/click_event"
+          >
+
+        <ImageView
+            android:id="@+id/img_event"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/app_name"
+            android:padding="5dp"
+            android:src="@drawable/ic_account" />
+
+
+          <TextView
+              android:id="@+id/tittle_event"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="10dp"
+              android:layout_marginTop="10dp"
+              android:layout_toEndOf="@id/img_event"
+              android:textColor="@color/black"
+              android:textSize="18sp"
+              android:textStyle="bold" />
+
+
+
+        <TextView
+            android:id="@+id/location_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+            android:layout_below="@id/tittle_event"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="19dp"
+            android:layout_toEndOf="@id/img_event"
+            android:drawablePadding="2dp"/>
 
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tittle Event:" />
+          <TextView
+              android:id="@+id/creator_event"
+              android:layout_width="257dp"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/location_event"
+              android:layout_marginStart="10dp"
+              android:layout_marginTop="19dp"
+              android:layout_toEndOf="@id/img_event"
+              android:drawablePadding="2dp" />
 
-            <TextView
-                android:id="@+id/tittle_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
+      </RelativeLayout>
+</androidx.cardview.widget.CardView>
 
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location:" />
 
-            <TextView
-                android:id="@+id/location_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-        </LinearLayout>
+
+
+
+
+
+
+<!--<androidx.cardview.widget.CardView-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    app:cardCornerRadius="15dp"-->
+<!--    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_margin="10dp">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="#A14646"-->
+<!--        android:padding="12dp"-->
+<!--        >-->
 <!--        <LinearLayout-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
@@ -61,14 +98,52 @@
 <!--            <TextView-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:text="Creator:" />-->
+<!--                android:text="Tittle Event:" />-->
 
 <!--            <TextView-->
-<!--                android:id="@+id/creator_event"-->
+<!--                android:id="@+id/tittle_event"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:text="Creator Name" />-->
+<!--                android:text="TextView" />-->
 <!--        </LinearLayout>-->
-    </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="12dp"-->
 
-</androidx.cardview.widget.CardView>
+<!--            >-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Location:" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/location_event"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="TextView" />-->
+<!--        </LinearLayout>-->
+<!--&lt;!&ndash;        <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:orientation="horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:padding="12dp"&ndash;&gt;-->
+
+<!--&lt;!&ndash;            >&ndash;&gt;-->
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="Creator:" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/creator_event"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="Creator Name" />&ndash;&gt;-->
+<!--&lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
+<!--    </LinearLayout>-->
+
+<!--</androidx.cardview.widget.CardView>-->
+
+
