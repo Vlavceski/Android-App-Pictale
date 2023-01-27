@@ -20,28 +20,28 @@ import kotlinx.android.synthetic.main.activity_registration.*
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var  mAuth: FirebaseAuth
+//    private lateinit var  mAuth: FirebaseAuth
     private lateinit var progresDialog: ProgressDialog
-    private lateinit var googleSignInClient: GoogleSignInClient
-
-    companion object {
-        private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 6
-    }
+//    private lateinit var googleSignInClient: GoogleSignInClient
+//
+//    companion object {
+//        private const val TAG = "GoogleActivity"
+//        private const val RC_SIGN_IN = 6
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        mAuth= FirebaseAuth.getInstance()
-        mAuth = Firebase.auth
+//        mAuth= FirebaseAuth.getInstance()
+//        mAuth = Firebase.auth
 
         progresDialog=ProgressDialog(this)
         progresDialog.setTitle("Please wait")
         progresDialog.setCancelable(false)
 
-        //Google Auth
+      /*  //Google Auth
         btn_google.setOnClickListener {
             signIn()
         }
@@ -50,8 +50,8 @@ class LoginActivity : AppCompatActivity() {
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        //Login user
+       */
+        /*//Login user
         btn_login.setOnClickListener {
             var email=email_login.text.toString()
             var pass=password_login.text.toString()
@@ -84,12 +84,20 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+         */
+
+
+
         txt_registration.setOnClickListener {
             startActivity(Intent(this, RegistrationActivity::class.java))
         }
 
+
+
     }
 
+
+/*
     override fun onStart() {
         super.onStart()
         val currentUser=mAuth.currentUser
@@ -122,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken,null)
-        Log.d(">>",idToken)
+        Log.d("Token>> ",idToken)
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -142,4 +150,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this,HomeActivity::class.java))
         }
     }
+
+ */
 }

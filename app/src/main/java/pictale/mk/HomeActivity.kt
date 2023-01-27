@@ -18,12 +18,12 @@ import java.nio.charset.Charset
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var mAuth: FirebaseAuth
+//    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        mAuth = FirebaseAuth.getInstance()
+//        mAuth = FirebaseAuth.getInstance()
 
         toolbar_click.setOnMenuItemClickListener{
             when(it.itemId){
@@ -63,6 +63,8 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+
+    /*
     private fun logout(){
         mAuth.signOut()
         updateUI(mAuth.currentUser)
@@ -84,6 +86,8 @@ class HomeActivity : AppCompatActivity() {
 //            usernameTV.text="Welcome ${mAuth.currentUser!!.email}"
 //        }
     }
+
+     */
 }
 
 

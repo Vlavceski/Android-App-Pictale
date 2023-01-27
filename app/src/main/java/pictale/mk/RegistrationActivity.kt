@@ -13,22 +13,24 @@ import pictale.mk.data.User
 
 
 class RegistrationActivity : AppCompatActivity() {
-    private lateinit var mAuth: FirebaseAuth
+//    private lateinit var mAuth: FirebaseAuth
     private lateinit var progresDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-        mAuth = FirebaseAuth.getInstance()
+//        mAuth = FirebaseAuth.getInstance()
+
         progresDialog= ProgressDialog(this)
         progresDialog.setTitle("Please wait")
         progresDialog.setMessage("Loading please wait")
         progresDialog.setCancelable(false)
+
         alreadyHaveAccount.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
         //Registration
-        btn_registration.setOnClickListener {
+       /* btn_registration.setOnClickListener {
             var firstName = firstName_registration.text.toString()
             var lastName = lastName_registration.text.toString()
             var email = email_registration.text.toString()
@@ -82,9 +84,14 @@ class RegistrationActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
 
 
+        */
+
+
+    }
+
+/*
     override fun onStart() {
         super.onStart()
         val currentUser = mAuth.currentUser
@@ -97,4 +104,6 @@ class RegistrationActivity : AppCompatActivity() {
             startActivity(Intent(this, HomeActivity::class.java))
         }
     }
+
+ */
 }
