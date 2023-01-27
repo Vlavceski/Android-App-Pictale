@@ -131,25 +131,25 @@ class RegistrationActivity : AppCompatActivity() {
             cnfpassword_registration.requestFocus()
         } else {
 
-            val okHttpClient= OkHttpClient.Builder()
-                .addInterceptor {
-                        chain ->
-                    val original=chain.request()
-                    val requestBuilder=original.newBuilder()
-                        .addHeader("Authorization", AUTH)
-                        .method(original.method, original.body)
-
-                    val request=requestBuilder.build()
-                    chain.proceed(request)
-                }.build()
+//            val okHttpClient= OkHttpClient.Builder()
+//                .addInterceptor {
+//                        chain ->
+//                    val original=chain.request()
+//                    val requestBuilder=original.newBuilder()
+//                        .addHeader("Authorization", AUTH)
+//                        .method(original.method, original.body)
+//
+//                    val request=requestBuilder.build()
+//                    chain.proceed(request)
+//                }.build()
 
             val retrofit = Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
+//                .client(okHttpClient)
                 .build()
 
-            retrofit.create(Api::class.java)
+            retrofit.create(API::class.java)
 
 
 //
