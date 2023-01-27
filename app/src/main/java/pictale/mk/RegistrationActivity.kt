@@ -9,11 +9,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_registration.*
+import pictale.mk.api.API
 import pictale.mk.data.User
+import pictale.mk.model.Signup
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class RegistrationActivity : AppCompatActivity() {
 //    private lateinit var mAuth: FirebaseAuth
+
+    private var URL="api-vnesi"
     private lateinit var progresDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +35,11 @@ class RegistrationActivity : AppCompatActivity() {
         alreadyHaveAccount.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
+        btn_registration.setOnClickListener {
+            Action()
+        }
+
+
 
         //Registration
        /* btn_registration.setOnClickListener {
@@ -88,6 +100,55 @@ class RegistrationActivity : AppCompatActivity() {
 
         */
 
+
+    }
+    private fun Action(){
+        val firstName=firstName_registration.toString().trim()
+        val lastName=lastName_registration.toString().trim()
+        val email=email_registration.toString().trim()
+        val pass=password_registration.toString().trim()
+        val cnfPass=cnfpassword_registration.toString().trim()
+
+        if (firstName.isEmpty()) {
+            firstName_registration.error = "Email Required!!!"
+            firstName_registration.requestFocus()
+        } else if (lastName.isEmpty()) {
+            lastName_registration.error = "Email Required!!!"
+            lastName_registration.requestFocus()
+        } else if (email.isEmpty()) {
+            email_registration.error = "Email Required!!!"
+            email_registration.requestFocus()
+        } else if (pass.isEmpty()) {
+            password_registration.error = "Password Required!!!"
+            password_registration.requestFocus()
+        } else if (cnfPass.isEmpty()) {
+            cnfpassword_registration.error = "Password Required!!!"
+            cnfpassword_registration.requestFocus()
+        }else if (cnfPass!=pass) {
+            cnfpassword_registration.error = "Its not confirmed password!!!"
+            cnfpassword_registration.requestFocus()
+        } else {
+
+//            Retrofit retrofit=new Retrofit
+//                .Builder()
+//                .baseUrl(URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//            API api=retofit.create(API.class);
+//            Call<Signup> call=api.createUser(firstName,lastName,email,password)
+//
+//            call.enqueue(new Callback<Signup>{
+//                onResponse  //startactiviti do home i napravi toast
+//
+//
+//                onFailer
+//            })
+
+            
+
+
+        }
 
     }
 
