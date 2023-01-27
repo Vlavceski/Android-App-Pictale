@@ -145,7 +145,7 @@ class RegistrationActivity : AppCompatActivity() {
 //                onFailer
 //            })
 
-            
+
 
 
         }
