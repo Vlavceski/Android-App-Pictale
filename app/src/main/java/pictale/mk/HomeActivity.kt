@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
         toolbar_click.setOnMenuItemClickListener{
             when(it.itemId){
                 R.id.profile_menu -> startActivity(Intent(this,SettingActivity::class.java))
-                R.id.logout_menu -> logout()
+//                R.id.logout_menu -> logout()
                 else -> {true}
             }
             true
