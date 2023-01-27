@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_registration.*
 import pictale.mk.api.API
+import pictale.mk.api.Api
 import pictale.mk.data.User
 import pictale.mk.model.Signup
 import retrofit2.Call
@@ -129,11 +130,13 @@ class RegistrationActivity : AppCompatActivity() {
             cnfpassword_registration.requestFocus()
         } else {
 
-//            Retrofit retrofit=new Retrofit
-//                .Builder()
-//                .baseUrl(URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
+            val retrofit = Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build()
+
+            retrofit.create(Api::class.java)
 //
 //            API api=retofit.create(API.class);
 //            Call<Signup> call=api.createUser(firstName,lastName,email,password)
