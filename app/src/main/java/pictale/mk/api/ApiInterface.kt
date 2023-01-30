@@ -4,7 +4,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import pictale.mk.auth.ResponseBody
 import pictale.mk.auth.Signin
-import pictale.mk.auth.Signup
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -16,10 +15,13 @@ interface ApiInterface {
     ): retrofit2.Call<ResponseBody>
 
     @Headers("Content-Type:application/json")
-    @POST("/api/v1/auth/register/")
+    @POST("/api/v1/auth/register")
     fun registerUser(
-        @Body info: Signup
-    ): retrofit2.Call<ResponseBody>
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String
+        ): retrofit2.Call<ResponseBody>
 
 
 }

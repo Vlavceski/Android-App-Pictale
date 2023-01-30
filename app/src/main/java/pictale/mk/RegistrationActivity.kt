@@ -10,8 +10,6 @@ import kotlinx.android.synthetic.main.activity_registration.*
 import pictale.mk.api.ApiInterface
 import pictale.mk.api.RetrofitInstance
 import pictale.mk.auth.ResponseBody
-import pictale.mk.auth.Signup
-import pictale.mk.auth.UserBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,38 +32,36 @@ class RegistrationActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
         btn_registration.setOnClickListener {
-
-//            if (firstName_registration.isEmpty()) {
-//                firstName_registration.error = "Email Required!!!"
-//                firstName_registration.requestFocus()
-//            } else if (lastName_registration.isEmpty()) {
-//                lastName_registration.error = "Email Required!!!"
-//                lastName_registration.requestFocus()
-//            } else if (email_registration.isEmpty()) {
-//                email_registration.error = "Email Required!!!"
-//                email_registration.requestFocus()
-//            } else if (password_registration.isEmpty()) {
-//                password_registration.error = "Password Required!!!"
-//                password_registration.requestFocus()
-//            } else if (cnfpassword_registration.isEmpty()) {
-//                cnfpassword_registration.error = "Password Required!!!"
-//                cnfpassword_registration.requestFocus()
-//            }else {
-//                signup()
-//            }
-            val email=email_registration.toString()
-            val firstName=firstName_registration.toString()
-            val lastName=lastName_registration.toString()
-            val pass=password_registration.toString()
+            val firstName = firstName_registration.text.toString()
+            val lastName = lastName_registration.text.toString()
+            val email = email_registration.text.toString()
+            val pass = password_registration.text.toString()
+            val cnfPass = cnfpassword_registration.text.toString()
+            if (firstName.isEmpty()) {
+                firstName_registration.error = "Email Required!!!"
+                firstName_registration.requestFocus()
+            } else if (lastName.isEmpty()) {
+                lastName_registration.error = "Email Required!!!"
+                lastName_registration.requestFocus()
+            } else if (email.isEmpty()) {
+                email_registration.error = "Email Required!!!"
+                email_registration.requestFocus()
+            } else if (pass.isEmpty()) {
+                password_registration.error = "Password Required!!!"
+                password_registration.requestFocus()
+            } else if (cnfPass.isEmpty()) {
+                cnfpassword_registration.error = "Password Required!!!"
+                cnfpassword_registration.requestFocus()
+            }else if (cnfPass!=pass) {
+                cnfpassword_registration.error = "Its not confirmed password!!!"
+                cnfpassword_registration.requestFocus()
+            } else {
                 signup(email,
                     firstName,
                     lastName,
                     pass)
+            }
         }
-
-
-
-
 
 
     }
@@ -75,9 +71,9 @@ class RegistrationActivity : AppCompatActivity() {
                        lastName: String,
                         password: String){
         val retIn = RetrofitInstance.getRetrofitInstance().create(ApiInterface::class.java)
-        val registerInfo = Signup(email,firstName,lastName,password)
+//        val registerInfo = Signup(email,firstName,lastName,password)
 
-        retIn.registerUser(registerInfo)
+        retIn.registerUser(email,firstName,lastName,password)
             .enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@RegistrationActivity, t.message, Toast.LENGTH_SHORT)
