@@ -6,17 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_registration.*
+import pictale.mk.api.API
+import pictale.mk.model.Signup
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
 //        private const val TAG = "GoogleActivity"
 //        private const val RC_SIGN_IN = 6
 //    }
+    private var URL="http://88.85.111.72:37990/api/v1/"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +38,11 @@ class LoginActivity : AppCompatActivity() {
         progresDialog=ProgressDialog(this)
         progresDialog.setTitle("Please wait")
         progresDialog.setCancelable(false)
+
+
+        btn_login.setOnClickListener {
+            Action()
+        }
 
       /*  //Google Auth
         btn_google.setOnClickListener {
@@ -95,6 +98,51 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+
+    private fun Action(){
+        val email=email_login.toString().trim()
+        val pass=password_login.toString().trim()
+
+        if (email.isEmpty()) {
+            email_login.error = "Email Required!!!"
+            email_login.requestFocus()
+        } else if (pass.isEmpty()) {
+            password_login.error = "Password Required!!!"
+           password_login.requestFocus()
+        }
+        else {
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            var api= retrofit.create(API::class.java)
+
+
+            api.loginUser(email,pass)
+                .enqueue(object: Callback<Signup> {
+                    override fun onResponse(
+                        call: Call<Signup>,
+                        response: Response<Signup>
+                    ) {
+                        Log.d("Login-->", "Done!!!")
+                        email_login.setText("")
+                        password_login.setText("")
+
+                        Toast.makeText(applicationContext,"Success",Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onFailure(call: Call<Signup>, t: Throwable) {
+                        Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
+                        email_login.setText("")
+                        password_login.setText("")
+
+                    }
+                })
+        }
+    }
+
 
 
 /*
