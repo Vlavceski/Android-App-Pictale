@@ -4,27 +4,12 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
-import pictale.mk.api.API
-import pictale.mk.model.Signup
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
-//    private lateinit var  mAuth: FirebaseAuth
     private lateinit var progresDialog: ProgressDialog
-//    private lateinit var googleSignInClient: GoogleSignInClient
-//
-//    companion object {
-//        private const val TAG = "GoogleActivity"
-//        private const val RC_SIGN_IN = 6
-//    }
+
     private var URL="http://88.85.111.72:37990/api/v1/"
 
 
@@ -32,8 +17,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-//        mAuth= FirebaseAuth.getInstance()
-//        mAuth = Firebase.auth
 
         progresDialog=ProgressDialog(this)
         progresDialog.setTitle("Please wait")
@@ -41,53 +24,17 @@ class LoginActivity : AppCompatActivity() {
 
 
         btn_login.setOnClickListener {
-            Action()
+//            if (email.isEmpty()){
+//                email_login.error="Email Required!!!"
+//                email_login.requestFocus()
+//            }
+//            else if(pass.isEmpty()){
+//                password_login.error="Password Required!!!"
+//                password_login.requestFocus()
+//            }
         }
 
-      /*  //Google Auth
-        btn_google.setOnClickListener {
-            signIn()
-        }
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-       */
-        /*//Login user
-        btn_login.setOnClickListener {
-            var email=email_login.text.toString()
-            var pass=password_login.text.toString()
-            if (email.isEmpty()){
-                email_login.error="Email Required!!!"
-                email_login.requestFocus()
-            }
-            else if(pass.isEmpty()){
-                password_login.error="Password Required!!!"
-                password_login.requestFocus()
-            }
-            else{
-                progresDialog.show()
-                mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
-                    progresDialog.dismiss()
-                    if (it.isSuccessful){
-                        finish()
-                        startActivity(Intent(this,HomeActivity::class.java))
-                    }
-                    else{
-                        Toast.makeText(
-                            this,
-                            "User login failed due to ${it.exception}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
 
-                }
-
-            }
-        }
-
-         */
 
 
 
@@ -99,49 +46,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun Action(){
-        val email=email_login.toString().trim()
-        val pass=password_login.toString().trim()
-
-        if (email.isEmpty()) {
-            email_login.error = "Email Required!!!"
-            email_login.requestFocus()
-        } else if (pass.isEmpty()) {
-            password_login.error = "Password Required!!!"
-           password_login.requestFocus()
-        }
-        else {
-
-            val retrofit = Retrofit.Builder()
-                .baseUrl(URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-            var api= retrofit.create(API::class.java)
-
-
-            api.loginUser(email,pass)
-                .enqueue(object: Callback<Signup> {
-                    override fun onResponse(
-                        call: Call<Signup>,
-                        response: Response<Signup>
-                    ) {
-                        Log.d("Login-->", "Done!!!")
-                        email_login.setText("")
-                        password_login.setText("")
-
-                        Toast.makeText(applicationContext,"Success",Toast.LENGTH_LONG).show()
-                    }
-
-                    override fun onFailure(call: Call<Signup>, t: Throwable) {
-                        Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
-                        email_login.setText("")
-                        password_login.setText("")
-
-                    }
-                })
-        }
-    }
 
 
 
