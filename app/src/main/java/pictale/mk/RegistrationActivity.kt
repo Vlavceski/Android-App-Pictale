@@ -7,9 +7,10 @@ import android.util.Log.d
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_registration.*
-import pictale.mk.api.ApiInterface
-import pictale.mk.api.RetrofitInstance
+import pictale.mk.auth.API
 import pictale.mk.auth.ResponseBody
+import pictale.mk.auth.RetrofitInstance
+import pictale.mk.auth.Signup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,7 +18,6 @@ import retrofit2.Response
 
 class RegistrationActivity : AppCompatActivity() {
 
-//    private var URL="http://88.85.111.72:37990/api/v1/"
     private lateinit var progresDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,24 +70,25 @@ class RegistrationActivity : AppCompatActivity() {
                         firstName: String,
                        lastName: String,
                         password: String){
-        val retIn = RetrofitInstance.getRetrofitInstance().create(ApiInterface::class.java)
-//        val registerInfo = Signup(email,firstName,lastName,password)
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        val signupDTO= Signup(email,firstName,lastName,password)
 
-        retIn.registerUser(email,firstName,lastName,password)
+        api.signup(signupDTO)
             .enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@RegistrationActivity, t.message, Toast.LENGTH_SHORT)
                     .show()
+                t.message?.let { d("-->", it) }
+
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 d("-->","${response.body()}")
-                if (response.code() == 201) {
+                if (response.code() == 200) {
                     Toast.makeText(this@RegistrationActivity, "Registration success!", Toast.LENGTH_SHORT)
                         .show()
-
                 }
                 else{
-                    Toast.makeText(this@RegistrationActivity, "Registration failed!", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@RegistrationActivity, "${response.body()}", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
