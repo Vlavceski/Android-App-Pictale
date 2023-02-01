@@ -4,7 +4,14 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_registration.*
+import pictale.mk.auth.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
@@ -21,22 +28,21 @@ class LoginActivity : AppCompatActivity() {
 
 
         btn_login.setOnClickListener {
-//            if (email.isEmpty()){
-//                email_login.error="Email Required!!!"
-//                email_login.requestFocus()
-//            }
-//            else if(pass.isEmpty()){
-//                password_login.error="Password Required!!!"
-//                password_login.requestFocus()
-//            }
-//                else {
-//
-//
-//        }
+            val email = email_login.text.toString()
+            val password = password_login.text.toString()
+                        if (email.isEmpty()){
+                email_login.error="Email Required!!!"
+                email_login.requestFocus()
+            }
+            else if(password.isEmpty()){
+                password_login.error="Password Required!!!"
+                password_login.requestFocus()
+            }
+                else {
+                        signin(email,password)
+                    }
+
         }
-
-
-
 
 
         txt_registration.setOnClickListener {
@@ -45,6 +51,32 @@ class LoginActivity : AppCompatActivity() {
 
 
 
+    }
+    fun signin(email: String,
+               password: String){
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        val signinDTO= Signin(email,password)
+
+        api.signin(signinDTO)
+            .enqueue(object : Callback<TokenResponse> {
+                override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                    Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT)
+                        .show()
+                    t.message?.let { Log.d("Login_failure-->", it) }
+
+                }
+                override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                    Log.d("Login_response-->", "${response.body()}")
+                    if (response.code() == 200) {
+                        Toast.makeText(this@LoginActivity, "Registration success!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    else{
+                        Toast.makeText(this@LoginActivity, "${response.body()}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            })
     }
 
 }

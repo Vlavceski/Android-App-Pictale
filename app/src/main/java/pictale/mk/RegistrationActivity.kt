@@ -78,11 +78,11 @@ class RegistrationActivity : AppCompatActivity() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@RegistrationActivity, t.message, Toast.LENGTH_SHORT)
                     .show()
-                t.message?.let { d("-->", it) }
+                t.message?.let { d("F-->", it) }
 
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                d("-->","${response.body()}")
+                d("R-->","${response.body()}")
                 if (response.code() == 200) {
                     Toast.makeText(this@RegistrationActivity, "Registration success!", Toast.LENGTH_SHORT)
                         .show()
