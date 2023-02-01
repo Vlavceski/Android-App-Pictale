@@ -9,7 +9,7 @@ interface API {
     fun signup(@Body signup: Signup): Call<ResponseBody>
 
 
-//    @Headers("Content-Type:application/json")
+    @FormUrlEncoded
     @POST("auth/login")
     fun signin(
         @Field("email") email: String,

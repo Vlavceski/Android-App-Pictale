@@ -1,6 +1,7 @@
 package pictale.mk
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -60,14 +61,19 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 Log.d("Login_response-->", "${response.body()}")
                     if (response.isSuccessful) {
-                        Toast.makeText(this@LoginActivity, "Registration success!", Toast.LENGTH_SHORT)
+                        Toast.makeText(this@LoginActivity, "Success!", Toast.LENGTH_SHORT)
                             .show()
                         Log.d("in R-->", "${response.body()}")
                         Log.d("in R-->", "${response.code()}")
                         Log.d("in R-->", response.body()?.token.toString())
                         email_login.setText("")
                         password_login.setText("")
+                        val Responsetoken = response.body()?.token.toString()
+                        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                        val token = sharedPreferences.getString("token", "")
+                        sharedPreferences.edit().putString(Responsetoken, token).apply()
 
+                        toHome()
 
                     }
                     else{
@@ -86,4 +92,9 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
+
+
+    fun toHome(){
+        startActivity(Intent(this, HomeActivity::class.java))
+    }
 }
