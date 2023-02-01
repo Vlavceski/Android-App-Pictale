@@ -1,5 +1,7 @@
 package pictale.mk.auth
 
 data class TokenResponse (
-            var token:String
+    var expiresIn: String,
+    var refreshToken: String,
+    var token: String
         )

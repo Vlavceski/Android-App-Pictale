@@ -1,6 +1,7 @@
 package pictale.mk.auth
 
 data class ResponseBody (
-    var errorMessage: String
-
+    var expiresIn: String,
+    var refreshToken: String,
+    var token: String
     )

@@ -1,9 +1,7 @@
 package pictale.mk.auth
 
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface API {
     @Headers("Content-Type:application/json")
@@ -11,8 +9,18 @@ interface API {
     fun signup(@Body signup: Signup): Call<ResponseBody>
 
 
-    @Headers("Content-Type:application/json")
+//    @Headers("Content-Type:application/json")
     @POST("auth/login")
-    fun signin(@Body signin: Signin): Call<TokenResponse>
+    fun signin(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): Call<TokenResponse>
+
+    @GET("user/getLoggedUser")
+    fun getClient(@Header("Authorization") bearerToken: String?): Call<LoggedResponse>
+//
+//    @GET("user/getLoggedUser")
+//    fun getClient(): Call<LoggedResponse>
+
 
 }

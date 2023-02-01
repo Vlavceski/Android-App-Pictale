@@ -1,7 +1,9 @@
 package pictale.mk
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log.d
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -69,14 +71,18 @@ class HomeActivity : AppCompatActivity() {
         mAuth.signOut()
         updateUI(mAuth.currentUser)
     }
-
+*/
 
     override fun onStart() {
         super.onStart()
-        val currentUser=mAuth.currentUser
-        updateUI(currentUser)
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
+        d("Token>>>","$token")
+//        val currentUser=mAuth.currentUser
+//        updateUI(currentUser)
+//    val currentUser=
     }
-
+/*
     private fun updateUI(currentUser: FirebaseUser?) {
         if (currentUser==null){
             finish()

@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
         btn_login.setOnClickListener {
             val email = email_login.text.toString()
             val password = password_login.text.toString()
-                        if (email.isEmpty()){
+            if (email.isEmpty()){
                 email_login.error="Email Required!!!"
                 email_login.requestFocus()
             }
@@ -52,31 +52,38 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
-    fun signin(email: String,
-               password: String){
+    fun signin(email: String,password: String){
+
         val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-        val signinDTO= Signin(email,password)
 
-        api.signin(signinDTO)
-            .enqueue(object : Callback<TokenResponse> {
-                override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT)
-                        .show()
-                    t.message?.let { Log.d("Login_failure-->", it) }
-
-                }
-                override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                    Log.d("Login_response-->", "${response.body()}")
-                    if (response.code() == 200) {
+        api.signin(email, password).enqueue(object :Callback<TokenResponse>{
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                Log.d("Login_response-->", "${response.body()}")
+                    if (response.isSuccessful) {
                         Toast.makeText(this@LoginActivity, "Registration success!", Toast.LENGTH_SHORT)
                             .show()
+                        Log.d("in R-->", "${response.body()}")
+                        Log.d("in R-->", "${response.code()}")
+                        Log.d("in R-->", response.body()?.token.toString())
+                        email_login.setText("")
+                        password_login.setText("")
+
+
                     }
                     else{
                         Toast.makeText(this@LoginActivity, "${response.body()}", Toast.LENGTH_SHORT)
                             .show()
                     }
+                 }
+
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT)
+                        .show()
+                    t.message?.let { Log.d("Login_failure-->", it) }
+                    email_login.setText("")
+                    password_login.setText("")
                 }
-            })
+        })
     }
 
 }

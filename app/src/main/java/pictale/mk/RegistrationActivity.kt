@@ -1,6 +1,7 @@
 package pictale.mk
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log.d
@@ -19,6 +20,9 @@ import retrofit2.Response
 class RegistrationActivity : AppCompatActivity() {
 
     private lateinit var progresDialog: ProgressDialog
+    private val sharedPreferences by lazy {
+        getSharedPreferences("preferences", Context.MODE_PRIVATE)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -78,14 +82,32 @@ class RegistrationActivity : AppCompatActivity() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@RegistrationActivity, t.message, Toast.LENGTH_SHORT)
                     .show()
-                t.message?.let { d("F-->", it) }
+                firstName_registration.setText("")
+                lastName_registration.setText("")
+                email_registration.setText("")
+                password_registration.setText("")
+                cnfpassword_registration.setText("")
+
+                d("in F-->","${t.message}")
 
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 d("R-->","${response.body()}")
-                if (response.code() == 200) {
+                if (response.isSuccessful) {
                     Toast.makeText(this@RegistrationActivity, "Registration success!", Toast.LENGTH_SHORT)
                         .show()
+                    d("in R-->","${response.body()}")
+                    d("in R-->","${response.code()}")
+                    d("in R-->", response.body()?.token.toString())
+                    firstName_registration.setText("")
+                    lastName_registration.setText("")
+                    email_registration.setText("")
+                    password_registration.setText("")
+                    cnfpassword_registration.setText("")
+                    val token = response.body()?.token.toString()
+                    sharedPreferences.edit().putString("token", token).apply()
+                    toHome()
+
                 }
                 else{
                     Toast.makeText(this@RegistrationActivity, "${response.body()}", Toast.LENGTH_SHORT)
@@ -95,6 +117,9 @@ class RegistrationActivity : AppCompatActivity() {
         })
     }
 
+fun toHome(){
+    startActivity(Intent(this, HomeActivity::class.java))
+}
 
 
 }
