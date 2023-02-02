@@ -7,15 +7,11 @@ import android.util.Log.d
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
 import pictale.mk.fragments.AllEventsFragment
 import pictale.mk.fragments.FavEventsFragment
 import pictale.mk.fragments.HighlightsFragment
 import pictale.mk.fragments.MyEventsFragment
-import java.io.IOException
-import java.nio.charset.Charset
 
 
 class HomeActivity : AppCompatActivity() {
@@ -30,11 +26,12 @@ class HomeActivity : AppCompatActivity() {
         toolbar_click.setOnMenuItemClickListener{
             when(it.itemId){
                 R.id.profile_menu -> startActivity(Intent(this,SettingActivity::class.java))
-//                R.id.logout_menu -> logout()
+                R.id.logout_menu -> logout()
                 else -> {true}
             }
             true
         }
+
 
         replaceFragment(AllEventsFragment())
         nav_click.setOnItemSelectedListener {
@@ -50,7 +47,12 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+    private fun logout() {
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("token", null).apply()
+        updateUI()
 
+    }
 
 
     private fun replaceFragment(fragment: Fragment) {
@@ -78,22 +80,19 @@ class HomeActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
         d("Token>>>","$token")
-//        val currentUser=mAuth.currentUser
-//        updateUI(currentUser)
-//    val currentUser=
-    }
-/*
-    private fun updateUI(currentUser: FirebaseUser?) {
-        if (currentUser==null){
-            finish()
-            startActivity(Intent(this,LoginActivity::class.java))
-        }
-//        else{
-//            usernameTV.text="Welcome ${mAuth.currentUser!!.email}"
-//        }
+        updateUI()
     }
 
-     */
+    private fun updateUI() {
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
+        d("Tokenot od home","$token")
+        if (token==""){
+            startActivity(Intent(this,LoginActivity::class.java))
+        }
+
+    }
+
 }
 
 

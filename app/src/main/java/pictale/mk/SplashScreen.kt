@@ -48,20 +48,13 @@ class SplashScreen : AppCompatActivity() {
         var isUserLoggedIn = false
 
         val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-//        val token=ResponseBody.body()
+
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
-        api.getClient(token).enqueue(object : Callback<LoggedResponse> {
-            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
-                if (response.isSuccessful) {
-                    isUserLoggedIn = true
-                }
-            }
-
-            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
-                d("Failure",t.message.toString())
-            }
-        })
+        d("token_spash","$token")
+        if(token!=null){
+            isUserLoggedIn = true
+        }
 
         return isUserLoggedIn
     }

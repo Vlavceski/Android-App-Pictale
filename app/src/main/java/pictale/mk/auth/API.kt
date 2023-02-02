@@ -8,13 +8,9 @@ interface API {
     @POST("auth/register")
     fun signup(@Body signup: Signup): Call<ResponseBody>
 
-
-    @FormUrlEncoded
+    @Headers("Content-Type:application/json")
     @POST("auth/login")
-    fun signin(
-        @Field("email") email: String,
-        @Field("password") password: String
-    ): Call<TokenResponse>
+    fun signin(@Body signin: Signin): Call<TokenResponse>
 
     @GET("user/getLoggedUser")
     fun getClient(@Header("Authorization") bearerToken: String?): Call<LoggedResponse>
