@@ -1,5 +1,6 @@
 package pictale.mk
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,11 +8,12 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.popup_change_info.*
@@ -20,10 +22,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@Suppress("NAME_SHADOWING")
 class SettingActivity : AppCompatActivity() {
 
-    private lateinit var mAuth: FirebaseAuth
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -33,18 +34,16 @@ class SettingActivity : AppCompatActivity() {
             startActivity(Intent(this,HomeActivity::class.java))
         }
         btn_change.setOnClickListener {
-            val popupWindow = PopupWindow(this)
+            val inflater = LayoutInflater.from(this)
+            val view = inflater.inflate(R.layout.popup_change_info, null)
 
-            val view = layoutInflater.inflate(R.layout.popup_change_info, null)
-            popupWindow.contentView = view
-
-            popupWindow.width = WindowManager.LayoutParams.WRAP_CONTENT
-            popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
-
-            popupWindow.isFocusable = true
+            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+            val focusable = true
+            val popupWindow = PopupWindow(view, width, height, focusable)
 
             popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0)
-            close_popup.setOnClickListener {
+           close_popup.setOnClickListener {
                 popupWindow.dismiss()
             }
         }
