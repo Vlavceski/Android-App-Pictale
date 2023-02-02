@@ -68,12 +68,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    /*
-    private fun logout(){
-        mAuth.signOut()
-        updateUI(mAuth.currentUser)
-    }
-*/
 
     override fun onStart() {
         super.onStart()

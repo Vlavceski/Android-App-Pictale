@@ -13,7 +13,7 @@ interface API {
     fun signin(@Body signin: Signin): Call<TokenResponse>
 
     @GET("user/getLoggedUser")
-    fun getClient(@Header("Authorization") bearerToken: String?): Call<LoggedResponse>
+    fun getClient(@Header("Authorization") token: String?): Call<LoggedResponse>
 //
 //    @GET("user/getLoggedUser")
 //    fun getClient(): Call<LoggedResponse>
