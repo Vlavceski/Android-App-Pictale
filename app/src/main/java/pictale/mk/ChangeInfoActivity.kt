@@ -5,15 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Log.d
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_change_info.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_setting.*
-import kotlinx.android.synthetic.main.popup_change_info.*
-import pictale.mk.auth.API
-import pictale.mk.auth.ChangeNameOrSurname
-import pictale.mk.auth.LoggedResponse
-import pictale.mk.auth.RetrofitInstance
+import pictale.mk.auth.*
+import pictale.mk.auth.responses.LoggedResponse
+import pictale.mk.auth.responses.ResponseUpdateInfo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,8 +23,78 @@ class ChangeInfoActivity : AppCompatActivity() {
             startActivity(Intent(this,SettingActivity::class.java))
         }
         change_info.setOnClickListener {
+            var inputName=firstName_change.text.toString()
+            var inputSurname=lastName_change.text.toString()
+            var currName:String
+            var currSurname:String
+
+            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("token", "")
+            val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+
+            Log.d("setting_token-->", "$token")
+
+            api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
+                override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
+                    Log.d("Profile_response-->", "${response.body()}")
+                    if (response.isSuccessful) {
+                        Log.d("in R-->", response.body()?.email.toString())
+                        currName=response.body()?.firstName.toString()
+                        currSurname=response.body()?.lastName.toString()
+                        var name:String
+                        var surname:String
+                        if (inputName!=currName && !inputName.isEmpty()){
+                            name=inputName
+                        }
+                        else {
+                            name=currName
+                        }
+                        if (inputSurname!=currSurname && !inputSurname.isEmpty()){
+                            surname=inputSurname
+                        }
+                        else {
+                            surname=currSurname
+                        }
+                        updateInfo(name,surname)
+
+                    }
+                }
+
+                override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
+                    Toast.makeText(this@ChangeInfoActivity, t.message, Toast.LENGTH_SHORT)
+                        .show()
+                    t.message?.let { Log.d("Login_failure-->", it) }
+                }
+            })
+
+
 
         }
+    }
+
+    private fun updateInfo(name: String, surname: String) {
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+
+        d("setting_token-->", "$token")
+        val update=UpdateInfo(name,surname)
+        api.updateInfo("Bearer $token",update).enqueue(object :Callback<ResponseUpdateInfo>{
+            override fun onResponse(call: Call<ResponseUpdateInfo>, response: Response<ResponseUpdateInfo>) {
+                d("setting_response-->", "${response.body()}")
+                if (response.isSuccessful) {
+                    d("Changed- Success "," Ok!!!")
+                    startActivity(Intent(this@ChangeInfoActivity, SettingActivity::class.java))
+
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseUpdateInfo>, t: Throwable) {
+                Toast.makeText(this@ChangeInfoActivity, t.message, Toast.LENGTH_SHORT)
+                    .show()
+                t.message?.let { Log.d("Login_failure-->", it) }
+            }
+        })
 
     }
 
@@ -46,78 +113,7 @@ class ChangeInfoActivity : AppCompatActivity() {
         if (token==""){
             startActivity(Intent(this,LoginActivity::class.java))
         }
-        showProfile()
     }
 
-    private fun showProfile() {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-
-        Log.d("Profile_token-->", "$token")
-
-        api.getClient("Bearer $token").enqueue(object : Callback<LoggedResponse> {
-            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
-                Log.d("Profile_response-->", "${response.body()}")
-                if (response.isSuccessful) {
-
-                    Log.d("in R-->", response.body()?.email.toString())
-                    val firstName=response.body()?.firstName.toString()
-                    val lastName=response.body()?.lastName.toString()
-                    changeFirstNameORLastName(firstName,lastName)
-
-                }
-            }
-
-            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
-                Toast.makeText(this@SettingActivity, t.message, Toast.LENGTH_SHORT)
-                    .show()
-                t.message?.let { Log.d("Login_failure-->", it) }
-                email_login.setText("")
-                password_login.setText("")
-            }
-        })
-    }
-
-    private fun changeFirstNameORLastName(firstName: String, lastName: String) {
-        val inputName = firstName_change.text.toString()
-        val inputSurname = lastName_change.text.toString()
-        var outputName:String?
-        val outputSurname:String?
-        outputName=firstName
-        if(inputName!=firstName && !inputName.isEmpty()){
-            outputName=inputName
-        }
-        else if(inputSurname){
-
-        }
-
-
-        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-
-        Log.d("Profile_token-->", "$token")
-        var changeDTO_n_s=ChangeNameOrSurname(firstName,lastName)
-        api.getClient("Bearer $token").enqueue(object : Callback<LoggedResponse> {
-            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
-                Log.d("Profile_response-->", "${response.body()}")
-                if (response.isSuccessful) {
-
-                    Log.d("in R-->", response.body()?.email.toString())
-                    val firstName=response.body()?.firstName.toString()
-                    val lastName=response.body()?.lastName.toString()
-                    changeFirstNameORLastName(firstName,lastName)
-
-                }
-            }
-
-            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
-                Toast.makeText(this@SettingActivity, t.message, Toast.LENGTH_SHORT)
-                    .show()
-                t.message?.let { Log.d("Login_failure-->", it) }
-                email_login.setText("")
-                password_login.setText("")
-            }
-        })
-    }
 
 }

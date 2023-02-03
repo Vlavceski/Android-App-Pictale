@@ -21,6 +21,22 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+
+        val fragment = AllEventsFragment()
+        val bundle = Bundle()
+
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+         val token = sharedPreferences.getString("token", "")
+
+
+        bundle.putString("token",token)
+        fragment.arguments = bundle
+
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.all_events, fragment)
+//            .commit()
+
+
         toolbar_click.setOnMenuItemClickListener{
             when(it.itemId){
                 R.id.profile_menu -> startActivity(Intent(this,SettingActivity::class.java))

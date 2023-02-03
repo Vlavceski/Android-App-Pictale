@@ -1,6 +1,5 @@
 package pictale.mk
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,12 +8,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log.d
 import android.view.WindowManager
-import pictale.mk.auth.API
-import pictale.mk.auth.LoggedResponse
-import pictale.mk.auth.RetrofitInstance
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Suppress("DEPRECATION")
 class SplashScreen : AppCompatActivity() {
@@ -26,20 +19,20 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         if (isUserLoggedIn()) {
+
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
-            }, 2000) }
+            }, 2000) } else {
 
-        else {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }, 2000)
 
-        }
+            }
 
     }
 
@@ -49,7 +42,7 @@ class SplashScreen : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
         d("token_spash","$token")
-        if(token.isNullOrBlank()){ //fix
+        if(token!=null){
             isUserLoggedIn = true
         }
 

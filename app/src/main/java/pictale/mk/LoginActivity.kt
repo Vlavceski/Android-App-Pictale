@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import pictale.mk.auth.*
+import pictale.mk.auth.responses.TokenResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_registration.*
 import pictale.mk.auth.API
-import pictale.mk.auth.ResponseBody
+import pictale.mk.auth.responses.ResponseBody
 import pictale.mk.auth.RetrofitInstance
 import pictale.mk.auth.Signup
 import retrofit2.Call

@@ -7,17 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupWindow
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_setting.*
-import kotlinx.android.synthetic.main.popup_change_info.*
 import pictale.mk.auth.*
+import pictale.mk.auth.responses.LoggedResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +31,10 @@ class SettingActivity : AppCompatActivity() {
             startActivity(Intent(this,ChangeInfoActivity::class.java))
         }
 
+        btn_change_password.setOnClickListener {
+            startActivity(Intent(this,ChangePasswordActivity::class.java))
+
+        }
     }
 
     override fun onStart() {
@@ -69,13 +67,12 @@ class SettingActivity : AppCompatActivity() {
         api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
             override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
                 d("Profile_response-->", "${response.body()}")
-                if (response.isSuccessful) {
+                if (response.code()==200) {
 
-                    d("in R-->", response.body()?.email.toString())
+                    d("in Response-->", response.body()?.email.toString())
                     val email=response.body()?.email.toString()
                     val firstName=response.body()?.firstName.toString()
                     val lastName=response.body()?.lastName.toString()
-                    val pictureUrl=response.body()?.pictureUrl.toString()
                     your_email.setText("Email: $email")
                     your_first_name.setText("First Name: $firstName")
                     your_last_name.setText("Last Name: $lastName")
@@ -87,8 +84,7 @@ class SettingActivity : AppCompatActivity() {
                 Toast.makeText(this@SettingActivity, t.message, Toast.LENGTH_SHORT)
                     .show()
                 t.message?.let { Log.d("Login_failure-->", it) }
-                email_login.setText("")
-                password_login.setText("")
+
             }
         })
     }
