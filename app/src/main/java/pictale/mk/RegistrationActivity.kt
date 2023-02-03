@@ -105,7 +105,7 @@ class RegistrationActivity : AppCompatActivity() {
                     password_registration.setText("")
                     cnfpassword_registration.setText("")
                     val token = response.body()?.token.toString()
-                    sharedPreferences.edit().putString("token", token).apply()
+                    sharedPreferences.edit().putString("token", token).apply() //fix
                     toHome()
 
                 }

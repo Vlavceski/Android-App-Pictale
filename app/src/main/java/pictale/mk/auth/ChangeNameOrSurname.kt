@@ -1,4 +1,6 @@
 package pictale.mk.auth
 
-class ChangeNameOrSurname {
-}
+data class ChangeNameOrSurname(
+    var firstName: String,
+    var lastName: String
+)

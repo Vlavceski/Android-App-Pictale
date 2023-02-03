@@ -25,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         progresDialog=ProgressDialog(this)
         progresDialog.setTitle("Please wait")
         progresDialog.setCancelable(false)
-
+            //fix delete
 
         btn_login.setOnClickListener {
             val email = email_login.text.toString()
@@ -61,12 +61,11 @@ class LoginActivity : AppCompatActivity() {
                             .show()
                         Log.d("in R-->", "${response.body()}")
                         Log.d("in R-->", "${response.code()}")
-                        Log.d("in R-->", response.body()?.token.toString())
+                        Log.d("in R-->", response.body()?.token.toString())   //fix d.names
                         val token = response.body()?.token.toString()
                         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
                         sharedPreferences.edit().putString("token", null).apply()
                         sharedPreferences.edit().putString("token",token).apply()
-
                         toHome()
 
                     }
@@ -81,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
                         .show()
                     t.message?.let { Log.d("Login_failure-->", it) }
                     email_login.setText("")
-                    password_login.setText("")
+                    password_login.setText("") //fix
                 }
         })
     }

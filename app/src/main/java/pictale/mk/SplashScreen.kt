@@ -16,7 +16,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@SuppressLint("CustomSplashScreen")
 @Suppress("DEPRECATION")
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,32 +26,30 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         if (isUserLoggedIn()) {
-
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
-            }, 2000) } else {
+            }, 2000) }
 
+        else {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }, 2000)
 
-            }
+        }
 
     }
 
     private fun isUserLoggedIn(): Boolean {
         var isUserLoggedIn = false
 
-        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
         d("token_spash","$token")
-        if(token!=null){
+        if(token.isNullOrBlank()){ //fix
             isUserLoggedIn = true
         }
 

@@ -16,12 +16,10 @@ import pictale.mk.fragments.MyEventsFragment
 
 class HomeActivity : AppCompatActivity() {
 
-//    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-//        mAuth = FirebaseAuth.getInstance()
 
         toolbar_click.setOnMenuItemClickListener{
             when(it.itemId){

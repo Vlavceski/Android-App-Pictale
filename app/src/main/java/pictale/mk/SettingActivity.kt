@@ -34,18 +34,7 @@ class SettingActivity : AppCompatActivity() {
             startActivity(Intent(this,HomeActivity::class.java))
         }
         btn_change.setOnClickListener {
-            val inflater = LayoutInflater.from(this)
-            val view = inflater.inflate(R.layout.popup_change_info, null)
-
-            val width = LinearLayout.LayoutParams.WRAP_CONTENT
-            val height = LinearLayout.LayoutParams.WRAP_CONTENT
-            val focusable = true
-            val popupWindow = PopupWindow(view, width, height, focusable)
-
-            popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0)
-           close_popup.setOnClickListener {
-                popupWindow.dismiss()
-            }
+            startActivity(Intent(this,ChangeInfoActivity::class.java))
         }
 
     }
