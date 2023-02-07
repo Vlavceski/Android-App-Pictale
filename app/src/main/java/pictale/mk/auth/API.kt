@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface API {
+
     @Headers("Content-Type:application/json")
     @POST("auth/register")
     fun signup(@Body signup: Signup): Call<ResponseBody>
@@ -23,10 +24,6 @@ interface API {
     @Headers("Content-Type:application/json")
     @POST("user/updatePassword")
     fun updatePassword(@Header("Authorization") token: String?, @Body updatePassword: UpdatePassword): Call<ResponseUpdatePassword>
-
-    @GET("event/find/all-for-home")
-    fun getAllEvents(@Header("Authorization") token: String?): Call<ResponseAllEvents>
-
 
 
 }
