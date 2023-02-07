@@ -1,16 +1,15 @@
 package pictale.mk.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_event_layout.view.*
 import pictale.mk.R
 import pictale.mk.auth.responses.ResponseAllEvents
-import pictale.mk.fragments.AllEventsFragment
 
-class EventAdapter(val context: AllEventsFragment, var data: List<ResponseAllEvents?>):
+class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents>):
     RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

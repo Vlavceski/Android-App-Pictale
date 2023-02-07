@@ -7,6 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.fragment_all_events.*
+import org.json.JSONException
 import pictale.mk.R
 import pictale.mk.adapters.EventAdapter
 import pictale.mk.auth.responses.ResponseAllEvents
@@ -31,25 +36,39 @@ class AllEventsFragment : Fragment() {
     override fun  onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
 
-        fetchData()
+        try {
+            val jsonString = fetchData()
+            d("json-->","$jsonString")
+//            val list: List<ResponseAllEvents> =
+//                Gson().fromJson(jsonString, object : TypeToken<List<ResponseAllEvents?>?>() {}.type)
+//            d("json-->","$list")
+//
+//            rvEventsList.layoutManager = LinearLayoutManager(activity)
+//            val itemAdapter = EventAdapter(requireActivity().applicationContext,
+//                list as MutableList<ResponseAllEvents>
+//            )
+//            rvEventsList.adapter = itemAdapter
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
 
     }
 
 
-    private fun fetchData() {
+    private fun fetchData(): String {
 
         val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
-
+        var apiData: String? =null
         api.getPublicEvents("public").enqueue(object :Callback<List<ResponseAllEvents>>{
             override fun onResponse(call: Call<List<ResponseAllEvents>>, response: Response<List<ResponseAllEvents>>) {
                 d("Allevents_response-->", "${response.body()}")
                 if (response.code()==200) {
                     d("in Response-->", "${response.body()}")
-                    val apiData = response.body()
-                    if (apiData != null) {
-                        EventAdapter(this@AllEventsFragment,apiData)
-                    }
-
+                    apiData = response.body().toString()
+//                    if (apiData != null) {
+//                        EventAdapter(this@AllEventsFragment,apiData)
+//                    }
+//                    return apiData
                 }
             }
 
@@ -59,9 +78,7 @@ class AllEventsFragment : Fragment() {
 
             }
         })
+        return apiData.toString()
     }
-
-
-
 
 }
