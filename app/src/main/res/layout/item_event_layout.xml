@@ -51,15 +51,15 @@
             android:layout_toEndOf="@id/img_event"
             android:drawablePadding="2dp"/>
 
-          <TextView
-              android:id="@+id/creator_event"
-              android:layout_width="257dp"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/location_event"
-              android:layout_marginStart="10dp"
-              android:layout_marginTop="19dp"
-              android:layout_toEndOf="@id/img_event"
-              android:drawablePadding="2dp" />
+<!--          <TextView-->
+<!--              android:id="@+id/creator_event"-->
+<!--              android:layout_width="257dp"-->
+<!--              android:layout_height="wrap_content"-->
+<!--              android:layout_below="@id/location_event"-->
+<!--              android:layout_marginStart="10dp"-->
+<!--              android:layout_marginTop="19dp"-->
+<!--              android:layout_toEndOf="@id/img_event"-->
+<!--              android:drawablePadding="2dp" />-->
 
       </RelativeLayout>
 </androidx.cardview.widget.CardView>

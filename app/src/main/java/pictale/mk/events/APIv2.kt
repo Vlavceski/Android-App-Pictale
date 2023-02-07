@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface APIv2 {
 
     @GET("event/findEventsByParameter")
-    fun getPublicEvents(@Query("value") public: String): Call<ResponseAllEvents>
+    fun getPublicEvents(@Query("value") public: String): Call<List<ResponseAllEvents>>
 
 
 }
