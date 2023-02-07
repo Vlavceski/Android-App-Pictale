@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddEventActivity">
+<!--    {-->
+<!--    "collaboration": "string",-->
+<!--    "description": "string",-->
+<!--    "isPublic": true,-->
+<!--    "location": "string",-->
+<!--    "name": "string",-->
+<!--    "tags": [-->
+<!--    "string"-->
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Add Event"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/add_collaboration"
+        android:layout_width="253dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="28dp"
+        android:hint="Collaboration"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_location" />
+
+    <EditText
+        android:id="@+id/add_description"
+        android:layout_width="282dp"
+        android:layout_height="136dp"
+        android:layout_marginTop="28dp"
+        android:hint="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_collaboration" />
+
+    <EditText
+        android:id="@+id/add_location"
+        android:layout_width="238dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="20dp"
+        android:hint="Location"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_name" />
+
+    <EditText
+        android:id="@+id/add_name"
+        android:layout_width="231dp"
+        android:layout_height="45dp"
+        android:hint="Name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="112dp" />
+
+    <EditText
+        android:id="@+id/add_tags"
+        android:layout_width="306dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="20dp"
+
+        android:hint="Tags"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_description" />
+
+    <Switch
+        android:id="@+id/add_isPublic"
+        android:layout_width="102dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:text="Public"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_tags"
+        app:layout_constraintVertical_bias="0.23"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 class AllEventsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EventAdapter
@@ -133,15 +134,11 @@ class AllEventsFragment : Fragment() {
                 d("Allevents_response-->", "${response.body()}")
                 if (response.code()==200) {
                     d("in Response-->", "${response.body()}")
-                    val apiData = response.body().toString()
+                    val apiData = response.body()
                     if (apiData != null) {
-                        recyclerView.layoutManager = LinearLayoutManager(activity)
-                        recyclerView.adapter = adapter
+                        rvEventsList.layoutManager = LinearLayoutManager(activity)
+                        rvEventsList.adapter = EventAdapter(this@AllEventsFragment, apiData as MutableList<ResponseAllEvents>)
 
-                        adapter = EventAdapter(this@AllEventsFragment, apiData as MutableList<ResponseAllEvents>)
-                        recyclerView.adapter = adapter
-
-                        EventAdapter(this@AllEventsFragment,apiData)
                     }
                 }
             }
