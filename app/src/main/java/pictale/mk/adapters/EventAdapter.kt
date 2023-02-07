@@ -23,7 +23,7 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        data[position]?.let { holder.bindData(it) }
+        data[position].let { holder.bindData(it) }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
