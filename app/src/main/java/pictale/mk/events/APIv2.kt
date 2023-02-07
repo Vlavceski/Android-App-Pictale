@@ -9,6 +9,9 @@ interface APIv2 {
 
     @GET("event/findEventsByParameter")
     fun getPublicEvents(@Query("value") public: String): Call<List<ResponseAllEvents>>
+    @GET("public")
+    fun getPublic(): Call<List<ResponseAllEvents>>
+
 
 
 }

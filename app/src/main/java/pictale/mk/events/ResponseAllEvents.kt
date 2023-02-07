@@ -6,7 +6,7 @@ data class API_events(
     val data: List<ResponseAllEvents>
     )
 
-data class ResponseAllEvents (
+data class ResponseAllEvents(
 //    val collaboration: Role,
 //    val createdBy:CreateBy,
 //    val dateCreated: Date,
