@@ -22,21 +22,9 @@
 
 
     <EditText
-        android:id="@+id/add_collaboration"
-        android:layout_width="253dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Collaboration"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_location" />
-
-    <EditText
         android:id="@+id/add_description"
         android:layout_width="254dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:hint="Description"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +92,37 @@ android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_tags"
         app:layout_constraintVertical_bias="0.111" />
+
+    <RadioGroup
+        android:id="@+id/add_collaboration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_location">
+
+        <RadioButton
+            android:id="@+id/ROLE_ANYONE"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:text="ANYONE" />
+
+        <RadioButton
+            android:id="@+id/ROLE_EDITORS"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:text="EDITORS" />
+
+        <RadioButton
+            android:id="@+id/ROLE_SELF"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:text="SELF" />
+    </RadioGroup>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

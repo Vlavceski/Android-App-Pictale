@@ -12,7 +12,8 @@ interface APIv2 {
     @POST("event/createNewEvent")
     fun addEvent(@Header("Authorization") token: String?,@Body addEventBody: AddEventBody):Call<ResponseAddEvent>
 
-
+    @GET("event/search/name-location-description")
+    fun searchItem(@Query("text") text: String):Call<List<ResponseAllEvents>>
 
 
 }

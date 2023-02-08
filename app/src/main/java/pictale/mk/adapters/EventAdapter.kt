@@ -1,5 +1,7 @@
 package pictale.mk.adapters
 
+import android.content.Intent
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,8 @@ import pictale.mk.fragments.AllEventsFragment
 
 class EventAdapter(val context: AllEventsFragment, var data: MutableList<ResponseAllEvents>):
     RecyclerView.Adapter<EventAdapter.ViewHolder>() {
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,6 +28,7 @@ class EventAdapter(val context: AllEventsFragment, var data: MutableList<Respons
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         data[position].let { holder.bindData(it) }
+
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,6 +36,7 @@ class EventAdapter(val context: AllEventsFragment, var data: MutableList<Respons
         fun bindData(data: ResponseAllEvents) {
             itemView.location_event.text = data.location
             itemView.tittle_event.text = data.name
+
         }
     }
 
