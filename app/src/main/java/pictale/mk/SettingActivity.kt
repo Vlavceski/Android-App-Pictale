@@ -1,28 +1,41 @@
 package pictale.mk
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.util.Log.d
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_setting.*
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import pictale.mk.auth.*
 import pictale.mk.auth.responses.LoggedResponse
+import pictale.mk.auth.responses.ResponseUploadPicture
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class SettingActivity : AppCompatActivity() {
-
+    private val PICK_IMAGE_REQUEST = 1
+    private lateinit var filePath: String
     @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+        profile_picture.setOnClickListener {
+           showFileChooser()
 
+        }
 
         back_page_click.setOnClickListener {
             startActivity(Intent(this,HomeActivity::class.java))
@@ -36,6 +49,44 @@ class SettingActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun showFileChooser() {
+        val intent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+        }
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+    }
+
+   
+
+    private fun uploadImage() {
+        val file = File(filePath)
+        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        val image = MultipartBody.Part.createFormData("image", file.name, requestBody)
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+
+        api.updatePicture("Bearer $token",image)
+            .enqueue(object :Callback<ResponseUploadPicture>{
+                override fun onResponse(
+                    call: Call<ResponseUploadPicture>,
+                    response: Response<ResponseUploadPicture>
+                ) {
+                    d("ispratena","slika")
+                }
+
+                override fun onFailure(call: Call<ResponseUploadPicture>, t: Throwable) {
+                    d("Failure","----------------------")
+                }
+            })
+
+
+    }
+
+
+
 
     override fun onStart() {
         super.onStart()
