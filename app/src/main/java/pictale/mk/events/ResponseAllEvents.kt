@@ -11,7 +11,7 @@ data class ResponseAllEvents(
 //    val createdBy:CreateBy,
 //    val dateCreated: Date,
 //    val description: String,
-//    var eventId:String,
+    var eventId:String,
 //    val isPublic: Boolean,
     val location: String,
     val name: String

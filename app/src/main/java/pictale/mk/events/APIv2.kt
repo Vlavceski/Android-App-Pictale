@@ -15,5 +15,7 @@ interface APIv2 {
     @GET("event/search/name-location-description")
     fun searchItem(@Query("text") text: String):Call<List<ResponseAllEvents>>
 
+    @GET("event/id/{id}")
+    fun getDetails(@Path("id") id: String): Call<ResponseDetails>
 
 }

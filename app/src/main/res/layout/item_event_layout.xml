@@ -15,45 +15,26 @@
     >
 
       <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
           android:id="@+id/click_event"
           >
 
-        <ImageView
-            android:id="@+id/img_event"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/app_name"
-            android:padding="5dp"
-            android:src="@drawable/ic_account" />
 
-
-          <TextView
-              android:id="@+id/tittle_event"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="10dp"
+          <ImageView
+              android:id="@+id/img_event"
+              android:layout_width="100dp"
+              android:layout_height="100dp"
+              android:layout_marginStart="40dp"
               android:layout_marginTop="10dp"
-              android:layout_toEndOf="@id/img_event"
-              android:textColor="@color/black"
-              android:textSize="18sp"
-              android:textStyle="bold" />
+              android:layout_marginEnd="10dp"
+              android:layout_marginBottom="10dp"
+              android:contentDescription="@string/app_name"
+              android:padding="5dp"
+              android:src="@drawable/ic_account" />
 
-
-
-        <TextView
-            android:id="@+id/location_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tittle_event"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="19dp"
-            android:layout_toEndOf="@id/img_event"
-            android:drawablePadding="2dp"/>
-
-<!--          <TextView-->
+          <!--          <TextView-->
 <!--              android:id="@+id/creator_event"-->
 <!--              android:layout_width="257dp"-->
 <!--              android:layout_height="wrap_content"-->
@@ -62,7 +43,33 @@
 <!--              android:layout_marginTop="19dp"-->
 <!--              android:layout_toEndOf="@id/img_event"-->
 <!--              android:drawablePadding="2dp" />-->
+          <TextView
+              android:id="@+id/tittle_event"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="10dp"
+              android:layout_marginTop="16dp"
+              android:layout_toEndOf="@id/img_event"
+              android:textColor="@color/black"
+              android:textSize="18sp"
+              android:textStyle="bold" />
 
+          <TextView
+              android:id="@+id/location_event"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/tittle_event"
+              android:layout_marginStart="10dp"
+              android:layout_marginTop="16dp"
+              android:layout_toEndOf="@id/img_event"
+              />
+
+          <ImageView
+              android:id="@+id/fav_click"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="6dp"
+              android:src="@drawable/ic_fav_emp" />
       </RelativeLayout>
 </androidx.cardview.widget.CardView>
 

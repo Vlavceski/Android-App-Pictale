@@ -30,7 +30,8 @@ interface API {
     @POST("user/updateProfilePicture")
     fun updatePicture(@Header("Authorization") token: String?, @Part file: MultipartBody.Part): Call<ResponseUploadPicture>
 
-
+    @GET("user/list-favourite-events")
+    fun getFavList(@Header("Authorization") token: String?): Call<List<ResponseFav>>
 
 
 }

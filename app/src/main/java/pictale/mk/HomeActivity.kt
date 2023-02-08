@@ -12,6 +12,7 @@ import pictale.mk.fragments.AllEventsFragment
 import pictale.mk.fragments.FavEventsFragment
 import pictale.mk.fragments.HighlightsFragment
 import pictale.mk.fragments.MyEventsFragment
+import pictale.mk.HomeActivity as HomeActivity
 
 
 class HomeActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
 
         add_event.setOnClickListener {
             startActivity(Intent(this,AddEventActivity::class.java))
@@ -37,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
 
         replaceFragment(AllEventsFragment())
         nav_click.setOnItemSelectedListener {
+
             when(it.itemId){
                 R.id.all_events -> replaceFragment(AllEventsFragment())
                 R.id.my_events -> replaceFragment(MyEventsFragment())
@@ -75,6 +78,7 @@ class HomeActivity : AppCompatActivity() {
         super.onStart()
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
+
         d("Token>>>","$token")
         updateUI()
     }

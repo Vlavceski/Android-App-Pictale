@@ -58,7 +58,7 @@ class SettingActivity : AppCompatActivity() {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
-   
+
 
     private fun uploadImage() {
         val file = File(filePath)
