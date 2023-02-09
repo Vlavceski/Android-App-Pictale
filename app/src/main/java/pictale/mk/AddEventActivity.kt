@@ -20,6 +20,9 @@ class AddEventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_event)
 
+        btn_back.setOnClickListener {
+            startActivity(Intent(this,HomeActivity::class.java))
+        }
         add.setOnClickListener {
             val name = add_name.text.toString()
             var collaboration ="ROLE_ANYONE"
