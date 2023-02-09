@@ -1,5 +1,6 @@
 package pictale.mk.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
@@ -33,12 +34,7 @@ class AllEventsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-        val view = inflater.inflate(R.layout.fragment_all_events, container, false)
-
-
-        return view
-//        return inflater.inflate(R.layout.fragment_all_events, container, false)
+        return inflater.inflate(R.layout.fragment_all_events, container, false)
     }
 
     private fun searchItems(it: String) {
@@ -52,7 +48,7 @@ class AllEventsFragment : Fragment() {
                 val apiData = response.body()
                 if (apiData != null) {
                     rvEventsList.layoutManager = LinearLayoutManager(activity)
-                    rvEventsList.adapter = EventAdapter(this@AllEventsFragment, apiData as MutableList<ResponseAllEvents>)
+                    rvEventsList.adapter = EventAdapter(requireContext(), apiData as MutableList<ResponseAllEvents>)
                 }
             }
 
@@ -97,7 +93,7 @@ class AllEventsFragment : Fragment() {
                     val apiData = response.body()
                     if (apiData != null) {
                         rvEventsList.layoutManager = LinearLayoutManager(activity)
-                        rvEventsList.adapter = EventAdapter(this@AllEventsFragment, apiData as MutableList<ResponseAllEvents>)
+                        rvEventsList.adapter = EventAdapter(requireContext(), apiData as MutableList<ResponseAllEvents>)
                     }
                 }
             }

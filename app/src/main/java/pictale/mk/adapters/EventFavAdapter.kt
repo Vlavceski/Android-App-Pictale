@@ -20,7 +20,6 @@ import retrofit2.Response
 class EventFavAdapter(val context: FavEventsFragment, var data: MutableList<ResponseFav>):
     RecyclerView.Adapter<EventFavAdapter.ViewHolder>() {
 
-    val data = arguments?.getString("key")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
