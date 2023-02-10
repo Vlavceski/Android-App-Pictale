@@ -1,5 +1,7 @@
 package pictale.mk.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
@@ -7,17 +9,18 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_event_layout.view.*
+import pictale.mk.DetailsActivity
+import pictale.mk.DetailsFavActivity
 import pictale.mk.R
 import pictale.mk.auth.responses.ResponseFav
 import pictale.mk.events.APIv2
 import pictale.mk.events.ResponseDetails
 import pictale.mk.events.RetrofitInstanceV2
-import pictale.mk.fragments.FavEventsFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EventFavAdapter(val context: FavEventsFragment, var data: MutableList<ResponseFav>):
+class EventFavAdapter(val context: Context, var data: MutableList<ResponseFav>):
     RecyclerView.Adapter<EventFavAdapter.ViewHolder>() {
 
 
@@ -38,11 +41,7 @@ class EventFavAdapter(val context: FavEventsFragment, var data: MutableList<Resp
             d("id--->" ,"$id")
             openDetails(id)
         }
-
-
     }
-
-
 
     private fun openDetails(id: String) {
         val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
@@ -54,7 +53,13 @@ class EventFavAdapter(val context: FavEventsFragment, var data: MutableList<Resp
                 d("Response-Det","${response.body()}")
                 val name=response.body()?.name.toString()
                 val location=response.body()?.location.toString()
+                val eventId=response.body()?.eventId.toString()
 
+                val intent = Intent(context, DetailsFavActivity::class.java)
+                intent.putExtra("name", name)
+                intent.putExtra("eventId", eventId)
+                intent.putExtra("location", location)
+                context.startActivity(intent)
             }
 
             override fun onFailure(call: Call<ResponseDetails>, t: Throwable) {

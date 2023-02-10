@@ -24,13 +24,13 @@ class SplashScreen : AppCompatActivity() {
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
-            }, 2000) } else {
+            }, 500) } else {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-            }, 2000)
+            }, 800)
 
             }
 
@@ -41,7 +41,7 @@ class SplashScreen : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
-        d("token_spash","$token")
+        d("token_splash","$token")
         if(token!=null){
             isUserLoggedIn = true
         }

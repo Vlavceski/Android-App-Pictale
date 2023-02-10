@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_all_events.*
+import kotlinx.android.synthetic.main.fragment_fav_events.*
 import pictale.mk.R
 import pictale.mk.adapters.EventFavAdapter
 import pictale.mk.auth.API
@@ -54,9 +54,8 @@ class FavEventsFragment : Fragment() {
                     d("Respo-Fav", "${response.body()}")
                     val apiData = response.body()
                     if (apiData != null) {
-
-                        rvEventsList.layoutManager = LinearLayoutManager(activity)
-                        rvEventsList.adapter = EventFavAdapter(this@FavEventsFragment, apiData as MutableList<ResponseFav>)
+                        rvEventsFavList.layoutManager = LinearLayoutManager(activity)
+                        rvEventsFavList.adapter = EventFavAdapter(requireContext(), apiData as MutableList<ResponseFav>)
                     }
 
                 }

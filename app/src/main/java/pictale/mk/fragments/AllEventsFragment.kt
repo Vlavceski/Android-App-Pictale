@@ -1,6 +1,5 @@
 package pictale.mk.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.d

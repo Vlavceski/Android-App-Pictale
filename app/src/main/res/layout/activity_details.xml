@@ -92,5 +92,14 @@
         app:layout_constraintTop_toBottomOf="@+id/grid_view"
         app:layout_constraintVertical_bias="0.969" />
 
+    <ImageView
+        android:id="@+id/btn_fav"
+        android:layout_width="40dp"
+        android:layout_height="45dp"
+        app:layout_constraintEnd_toStartOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:srcCompat="@drawable/ic_fav_emp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

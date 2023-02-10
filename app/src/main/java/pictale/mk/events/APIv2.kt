@@ -18,4 +18,9 @@ interface APIv2 {
     @GET("event/id/{id}")
     fun getDetails(@Path("id") id: String): Call<ResponseDetails>
 
+    @POST("event/insert-event-into-favourites")
+    fun insertEventFav(@Header("Authorization") token: String?,@Query("eventId") eventId: String):Call<ResponseInsertFav>
+
+    @DELETE("event/remove-event-from-favourites")
+    fun deleteEventFav(@Header("Authorization") token: String?,@Query("eventId") eventId: String):Call<ResponseDeleteFav>
 }

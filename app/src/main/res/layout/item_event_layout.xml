@@ -34,16 +34,7 @@
               android:padding="5dp"
               android:src="@drawable/ic_account" />
 
-          <!--          <TextView-->
-<!--              android:id="@+id/creator_event"-->
-<!--              android:layout_width="257dp"-->
-<!--              android:layout_height="wrap_content"-->
-<!--              android:layout_below="@id/location_event"-->
-<!--              android:layout_marginStart="10dp"-->
-<!--              android:layout_marginTop="19dp"-->
-<!--              android:layout_toEndOf="@id/img_event"-->
-<!--              android:drawablePadding="2dp" />-->
-          <TextView
+         <TextView
               android:id="@+id/tittle_event"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
