@@ -23,7 +23,7 @@ class DetailsActivity : AppCompatActivity() {
         back_page_click.setOnClickListener {
             startActivity(Intent(this@DetailsActivity,HomeActivity::class.java))
         }
-
+        
 
     }
 

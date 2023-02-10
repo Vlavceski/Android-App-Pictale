@@ -87,11 +87,13 @@ class HomeActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
         d("Tokenot od home","$token")
+
         if (token==""){
             startActivity(Intent(this,LoginActivity::class.java))
         }
 
     }
+
 
 }
 

@@ -2,7 +2,6 @@ package pictale.mk.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.Log.d
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,32 +34,39 @@ class FavEventsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
-//        val token = arguments?.getString("token")
-//        fetchData(token)
+        val sharedPreferences = requireContext().getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
+        d("token-fav","$token")
+        if (token != null) {
+            fetchData(token)
+        }
     }
 
-    private fun fetchData() {
-//
-//        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-//        d("Token_fav--> ","$token")
-//        api.getFavList(token).enqueue(object : Callback<List<ResponseFav>> {
-//            override fun onResponse(call: Call<List<ResponseFav>>,
-//                                    response: Response<List<ResponseFav>>) {
-//                if (response.code()==200) {
-//                    Log.d("in Response-->", "${response.body()}")
-//                    val apiData = response.body()
-//                    if (apiData != null) {
-//                        rvEventsList.layoutManager = LinearLayoutManager(activity)
-//                        rvEventsList.adapter = EventFavAdapter(this@FavEventsFragment, apiData as MutableList<ResponseFav>)
-//                    }
-//                }
-//            }
-//            override fun onFailure(call: Call<List<ResponseFav>>, t: Throwable) {
-//
-//                t.message?.let { Log.d("Login_failure-->", it) }
-//
-//            }
-//        })
+    private fun fetchData(token:String) {
+
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        d("Token_fav--> ","$token")
+        api.getFavList("Bearer $token").enqueue(object : Callback<List<ResponseFav>> {
+            override fun onResponse(call: Call<List<ResponseFav>>,
+                                    response: Response<List<ResponseFav>>
+            ) {
+                if (response.code()==200) {
+                    d("Respo-Fav", "${response.body()}")
+                    val apiData = response.body()
+                    if (apiData != null) {
+
+                        rvEventsList.layoutManager = LinearLayoutManager(activity)
+                        rvEventsList.adapter = EventFavAdapter(this@FavEventsFragment, apiData as MutableList<ResponseFav>)
+                    }
+
+                }
+            }
+            override fun onFailure(call: Call<List<ResponseFav>>, t: Throwable) {
+
+                t.message?.let { d("Login_failure-->", it) }
+
+            }
+        })
 
     }
 
