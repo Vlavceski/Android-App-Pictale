@@ -6,9 +6,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Log.d
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import kotlinx.android.synthetic.main.activity_login.*
 import pictale.mk.auth.*
+import pictale.mk.auth.responses.ResponseGoogleLogin
 import pictale.mk.auth.responses.TokenResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,7 +22,7 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var progresDialog: ProgressDialog
-
+    private var RC_SIGN_IN=6
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -27,6 +32,20 @@ class LoginActivity : AppCompatActivity() {
         progresDialog.setTitle("Please wait")
         progresDialog.setCancelable(false)
             //fix delete
+
+        btn_google.setOnClickListener {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+            val signInIntent = googleSignInClient.signInIntent
+
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+
+        }
+
 
         btn_login.setOnClickListener {
             val email = email_login.text.toString()
@@ -50,6 +69,40 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val token = account?.idToken
+                val api= RetrofitInstance.getRetrofitInstance().create(API::class.java)
+                val DTOGoogleSignIn= token?.let { GoogleSignIn(it) }
+                api.signinWithGoogle(DTOGoogleSignIn!!).enqueue(object : Callback<ResponseGoogleLogin>{
+                    override fun onResponse(
+                        call: Call<ResponseGoogleLogin>,
+                        response: Response<ResponseGoogleLogin>
+                    ) {
+                        val tokenR=response.body()?.token.toString()
+                        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                        sharedPreferences.edit().putString("token", null).apply()
+                        sharedPreferences.edit().putString("token",tokenR).apply()
+                        d("token--","$tokenR")
+                        startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
+                    }
+
+                    override fun onFailure(call: Call<ResponseGoogleLogin>, t: Throwable) {
+                        d("Failure","${t.message}")
+                    }
+
+                })
+            } catch (e: ApiException) {
+            }
+        }
+    }
+
+
     fun signin(email: String,password: String){
 
         val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
@@ -67,7 +120,8 @@ class LoginActivity : AppCompatActivity() {
                         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
                         sharedPreferences.edit().putString("token", null).apply()
                         sharedPreferences.edit().putString("token",token).apply()
-                        toHome()
+
+                        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
 
                     }
                     else{
@@ -88,7 +142,5 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-    fun toHome(){
-        startActivity(Intent(this, HomeActivity::class.java))
-    }
+
 }

@@ -33,5 +33,9 @@ interface API {
     @GET("user/list-favourite-events")
     fun getFavList(@Header("Authorization") token: String?): Call<List<ResponseFav>>
 
+    @Headers("Content-Type:application/json")
+    @POST("auth/googleLogin")
+    fun signinWithGoogle(@Body googleSignIn: GoogleSignIn): Call<ResponseGoogleLogin>
+
 
 }
