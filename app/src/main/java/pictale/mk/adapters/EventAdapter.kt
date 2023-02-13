@@ -2,17 +2,21 @@ package pictale.mk.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlinx.android.synthetic.main.item_event_layout.view.*
 import pictale.mk.DetailsActivity
 import pictale.mk.R
 import pictale.mk.auth.responses.ResponseAllEvents
 import pictale.mk.events.APIv2
+import pictale.mk.events.EventFile
 import pictale.mk.events.ResponseDetails
 import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
@@ -36,7 +40,6 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
         data[position].let { holder.bindData(it) }
         val id = data[position].eventId
         holder.card.setOnClickListener {
-            d("id--->" ,"$id")
             openDetails(id)
         }
 
@@ -63,12 +66,32 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                 val name=response.body()?.name.toString()
                 val location=response.body()?.location.toString()
                 val eventId=response.body()?.eventId.toString()
+                val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
+                d("EVENT_FILES_LIST--","${eventFilesList}")
 
-                val intent = Intent(context, DetailsActivity::class.java)
-                intent.putExtra("name", name)
-                intent.putExtra("eventId", eventId)
-                intent.putExtra("location", location)
-                context.startActivity(intent)
+
+
+                val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
+                if (imageUrisString != null) {
+                    var imageUris: ArrayList<Uri>
+
+                     imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>
+                    val intent = Intent(context, DetailsActivity::class.java)
+                    intent.putExtra("name", name)
+                    intent.putExtra("eventId", eventId)
+                    intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
+                    d("-----------","$imageUris")
+                    intent.putExtra("location", location)
+                    context.startActivity(intent)
+                 }
+
+
+//                val intent = Intent(context, DetailsActivity::class.java)
+//                intent.putExtra("name", name)
+//                intent.putExtra("eventId", eventId)
+//                intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
+//                intent.putExtra("location", location)
+//                context.startActivity(intent)
 
             }
 

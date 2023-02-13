@@ -66,20 +66,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_of_event" />
 
-    <GridView
-        android:id="@+id/grid_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnWidth="100dp"
-        android:gravity="center"
-        android:minHeight="90dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_of_event" />
+        app:layout_constraintTop_toBottomOf="@+id/location_of_event"
+        app:layout_constraintVertical_bias="0.12" />
 
     <Button
         android:id="@+id/add_file"
@@ -88,9 +85,22 @@
         android:text="Add File"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grid_view"
-        app:layout_constraintVertical_bias="0.969" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.974" />
+
+    <Button
+        android:id="@+id/upload_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.974" />
 
     <ImageView
         android:id="@+id/btn_fav"

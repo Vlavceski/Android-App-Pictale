@@ -1,5 +1,6 @@
 package pictale.mk.events
 
+import okhttp3.MultipartBody
 import pictale.mk.auth.responses.ResponseAllEvents
 import retrofit2.Call
 import retrofit2.http.*
@@ -23,4 +24,13 @@ interface APIv2 {
 
     @DELETE("event/remove-event-from-favourites")
     fun deleteEventFav(@Header("Authorization") token: String?,@Query("eventId") eventId: String):Call<ResponseDeleteFav>
+
+    @Multipart
+    @POST("api/v2/event/upload-multiple-files")
+    fun uploadFiles(
+        @Header("Authorization") token: String?,
+        @Part eventId:String,
+        @Part images: MultipartBody.Part
+    ): Call<ResponseUploadFile>
+
 }
