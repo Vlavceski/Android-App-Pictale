@@ -67,7 +67,7 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                 val location=response.body()?.location.toString()
                 val eventId=response.body()?.eventId.toString()
                 val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
-                d("EVENT_FILES_LIST--","${eventFilesList}")
+//                d("EVENT_FILES_LIST--","${eventFilesList}")
 
 
 
@@ -80,18 +80,11 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                     intent.putExtra("name", name)
                     intent.putExtra("eventId", eventId)
                     intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
-                    d("-----------","$imageUris")
+//                    d("-----------","$imageUris")
                     intent.putExtra("location", location)
                     context.startActivity(intent)
                  }
 
-
-//                val intent = Intent(context, DetailsActivity::class.java)
-//                intent.putExtra("name", name)
-//                intent.putExtra("eventId", eventId)
-//                intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
-//                intent.putExtra("location", location)
-//                context.startActivity(intent)
 
             }
 

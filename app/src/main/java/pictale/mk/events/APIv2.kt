@@ -27,10 +27,9 @@ interface APIv2 {
 
     @Multipart
     @POST("api/v2/event/upload-multiple-files")
-    fun uploadFiles(
-        @Header("Authorization") token: String?,
-        @Part eventId:String,
-        @Part images: MultipartBody.Part
+    fun uploadFiles( @Header("Authorization") token: String?,
+                    @Part eventId:String,
+                    @Part images: MultipartBody.Part
     ): Call<ResponseUploadFile>
 
 }
