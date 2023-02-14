@@ -1,19 +1,16 @@
 package pictale.mk
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.util.Log.d
-import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.back_page_click
 import kotlinx.android.synthetic.main.activity_details.location_of_event
 import kotlinx.android.synthetic.main.activity_details.name_of_event
 import kotlinx.android.synthetic.main.activity_details_fav.*
+import pictale.mk.auth.AuthToken
 import pictale.mk.events.APIv2
 import pictale.mk.events.ResponseDeleteFav
-import pictale.mk.events.ResponseInsertFav
 import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,9 +30,9 @@ class DetailsFavActivity : AppCompatActivity() {
             startActivity(Intent(this@DetailsFavActivity,HomeActivity::class.java))
         }
         btn_fav_del.setOnClickListener {
-            val sharedPreferences=getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val token=sharedPreferences.getString("token","")
+            val token=AuthToken.get(this)
             val api= RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+
             api.deleteEventFav("Bearer $token",eventId!!).enqueue(object :Callback<ResponseDeleteFav>{
                 override fun onResponse(
                     call: Call<ResponseDeleteFav>,
@@ -43,7 +40,6 @@ class DetailsFavActivity : AppCompatActivity() {
                 ) {
                     startActivity(Intent(this@DetailsFavActivity,HomeActivity::class.java))
                 }
-
                 override fun onFailure(call: Call<ResponseDeleteFav>, t: Throwable) {
                     d("Failure","${t.message}")
                 }

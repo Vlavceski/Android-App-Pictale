@@ -74,13 +74,11 @@ class SettingActivity : AppCompatActivity() {
 
 
 
-    private fun uploadImage() {
-        val file = File(filePath)
-        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-        val image = MultipartBody.Part.createFormData("image", file.name, requestBody)
-
-
-    }
+//    private fun uploadImage() {
+//        val file = File(filePath)
+//        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+//        val image = MultipartBody.Part.createFormData("image", file.name, requestBody)
+//    }
 
     fun pickedPhoto (view: View) {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -119,7 +117,7 @@ class SettingActivity : AppCompatActivity() {
             val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
             val token = sharedPreferences.getString("token", "")
             val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
-
+            d("photo-->","$fileToUpload")
             api.updatePicture("Bearer $token",fileToUpload)
                 .enqueue(object :Callback<ResponseUploadPicture>{
                     override fun onResponse(

@@ -26,11 +26,9 @@ class ChangePasswordActivity : AppCompatActivity() {
             val inputNewPassword=change_newPassword.text.toString()
             val inputOldPassword=change_oldPassword.text.toString()
 
-            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("token", "")
+            val token = AuthToken.get(this)
             val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
 
-            d("ChangeP_token-->", "$token")
             val updatePassword=UpdatePassword(inputNewPassword,inputOldPassword)
 
             api.updatePassword("Bearer $token",updatePassword).enqueue(object : Callback<ResponseUpdatePassword>{
@@ -38,9 +36,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                     call: Call<ResponseUpdatePassword>,
                     response: Response<ResponseUpdatePassword>
                 ) {
-                    d("Response-update: ","${response.body()}")
                     if(response.code()==200){
-                        d("Response","Code -Success")
                         startActivity(Intent(this@ChangePasswordActivity,SettingActivity::class.java))
                         change_newPassword.setText("")
                         change_oldPassword.setText("")
@@ -64,16 +60,11 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Token>>>", "$token")
         updateUI()
 
     }
     private fun updateUI() {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Tokenot od home", "$token")
+        val token=AuthToken.get(this)
         if (token==""){
             startActivity(Intent(this,LoginActivity::class.java))
         }

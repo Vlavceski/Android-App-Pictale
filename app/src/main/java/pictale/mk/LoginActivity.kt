@@ -84,11 +84,14 @@ class LoginActivity : AppCompatActivity() {
                         call: Call<ResponseGoogleLogin>,
                         response: Response<ResponseGoogleLogin>
                     ) {
-                        val tokenR=response.body()?.token.toString()
+                        val token=response.body()?.token.toString()
+//                        val refreshToken = response.body()?.refreshToken.toString()
+//                        val expiresIn = response.body()?.expiresIn.toString()
+
                         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-                        sharedPreferences.edit().putString("token", null).apply()
-                        sharedPreferences.edit().putString("token",tokenR).apply()
-                        d("token--","$tokenR")
+                        sharedPreferences.edit().putString("token",token).apply()
+//                        sharedPreferences.edit().putString("refreshToken",refreshToken).apply()
+//                        sharedPreferences.edit().putString("expiresIn",expiresIn).apply()
                         startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
                     }
 
@@ -109,20 +112,17 @@ class LoginActivity : AppCompatActivity() {
         val SigninDTO=Signin(email, password)
         api.signin(SigninDTO).enqueue(object :Callback<TokenResponse>{
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                Log.d("Login_response-->", "${response.body()}")
                     if (response.isSuccessful) {
-                        Toast.makeText(this@LoginActivity, "Success!", Toast.LENGTH_SHORT)
-                            .show()
-                        Log.d("in R-->", "${response.body()}")
-                        Log.d("in R-->", "${response.code()}")
-                        Log.d("in R-->", response.body()?.token.toString())   //fix d.names
                         val token = response.body()?.token.toString()
+//                        val refreshToken = response.body()?.refreshToken.toString()
+//                        val expiresIn = response.body()?.expiresIn.toString()
+
                         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-                        sharedPreferences.edit().putString("token", null).apply()
                         sharedPreferences.edit().putString("token",token).apply()
+//                        sharedPreferences.edit().putString("refreshToken",refreshToken).apply()
+//                        sharedPreferences.edit().putString("expiresIn",expiresIn).apply()
 
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-
                     }
                     else{
                         Toast.makeText(this@LoginActivity, "${response.body()}", Toast.LENGTH_SHORT)
@@ -133,9 +133,8 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT)
                         .show()
-                    t.message?.let { Log.d("Login_failure-->", it) }
                     email_login.setText("")
-                    password_login.setText("") //fix
+                    password_login.setText("")
                 }
         })
     }

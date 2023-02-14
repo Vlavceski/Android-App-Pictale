@@ -80,8 +80,7 @@ class RegistrationActivity : AppCompatActivity() {
         api.signup(signupDTO)
             .enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(this@RegistrationActivity, t.message, Toast.LENGTH_SHORT)
-                    .show()
+
                 firstName_registration.setText("")
                 lastName_registration.setText("")
                 email_registration.setText("")
@@ -93,33 +92,43 @@ class RegistrationActivity : AppCompatActivity() {
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 d("R-->","${response.body()}")
-                if (response.isSuccessful) {
-                    Toast.makeText(this@RegistrationActivity, "Registration success!", Toast.LENGTH_SHORT)
-                        .show()
-                    d("in R-->","${response.body()}")
-                    d("in R-->","${response.code()}")
-                    d("in R-->", response.body()?.token.toString())
-                    firstName_registration.setText("")
-                    lastName_registration.setText("")
-                    email_registration.setText("")
-                    password_registration.setText("")
-                    cnfpassword_registration.setText("")
-                    val token = response.body()?.token.toString()
-                    sharedPreferences.edit().putString("token", token).apply() //fix
-                    toHome()
+                firstName_registration.setText("")
+                lastName_registration.setText("")
+                email_registration.setText("")
+                password_registration.setText("")
+                cnfpassword_registration.setText("")
+                val token = response.body()?.token.toString()
+//                val refreshToken = response.body()?.refreshToken.toString()
+//                val expiresIn = response.body()?.expiresIn.toString()
+                val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+                sharedPreferences.edit().putString("token", token).apply()
+//                sharedPreferences.edit().putString("refreshToken", refreshToken).apply()
+//                sharedPreferences.edit().putString("expiresIn", expiresIn).apply()
 
-                }
-                else{
-                    Toast.makeText(this@RegistrationActivity, "${response.body()}", Toast.LENGTH_SHORT)
-                        .show()
-                }
+                startActivity(Intent(this@RegistrationActivity, HomeActivity::class.java))
+
+//                if (response.isSuccessful) {
+//                    firstName_registration.setText("")
+//                    lastName_registration.setText("")
+//                    email_registration.setText("")
+//                    password_registration.setText("")
+//                    cnfpassword_registration.setText("")
+//                    val token = response.body()?.token.toString()
+//                    val refreshToken = response.body()?.refreshToken.toString()
+//                    val expiresIn = response.body()?.expiresIn.toString()
+//                    val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+//                    sharedPreferences.edit().putString("token", token).apply()
+//                    sharedPreferences.edit().putString("refreshToken", refreshToken).apply()
+//                    sharedPreferences.edit().putString("expiresIn", expiresIn).apply()
+//
+//                    startActivity(Intent(this@RegistrationActivity, HomeActivity::class.java))
+//
+//                }
+//                else{
+//                    Toast.makeText(this@RegistrationActivity, "${response.body()}", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
             }
         })
     }
-
-fun toHome(){
-    startActivity(Intent(this, HomeActivity::class.java))
-}
-
-
 }

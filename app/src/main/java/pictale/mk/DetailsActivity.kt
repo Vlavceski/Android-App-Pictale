@@ -1,14 +1,13 @@
 package pictale.mk
 
 import android.*
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,11 +18,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_details.*
+import kotlinx.android.synthetic.main.activity_details.back_page_click
+import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.activity_splash_screen.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import pictale.mk.adapters.ImageAdapter
 import pictale.mk.events.APIv2
 import pictale.mk.events.ResponseInsertFav
@@ -32,8 +32,6 @@ import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class DetailsActivity : AppCompatActivity() {
@@ -85,11 +83,10 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
-    //Upload Image from Gallery
     fun pickedPhoto (view: View) {
-        if(ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         } else {
             val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(galleryIntext, 2)
@@ -105,57 +102,119 @@ class DetailsActivity : AppCompatActivity() {
     }
     //Upload Image from Gallery
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == 2 && resultCode == RESULT_OK && data != null){
-            pickedPhoto = data.data
-            if(Build.VERSION.SDK_INT >= 28){
-                val source = ImageDecoder.createSource(this.contentResolver, pickedPhoto!!)
-                pickedBitMap = ImageDecoder.decodeBitmap(source)
-                img_upload.setImageBitmap(pickedBitMap)
+
+        if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
+            val selectedPhotos = mutableListOf<Uri>()
+            val clipData = data?.clipData
+
+            if (clipData != null) {
+                for (i in 0 until clipData.itemCount) {
+                    selectedPhotos.add(clipData.getItemAt(i).uri)
+                }
             } else {
-                pickedBitMap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedPhoto)
-                img_upload.setImageBitmap(pickedBitMap)
+                var s=data?.data?.let { selectedPhotos.add(it) }
+
+                d("in else","$s")
             }
-            val file = File(getRealPathFromURI(pickedPhoto!!))
-            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-            val fileToUpload = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-            val eventId = intent.getStringExtra("eventId")
-            val api=RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
-            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("token", "")
-            d("@@@@","$eventId")
-            d("@@@@","$fileToUpload")
-            d("@@@@","$token")
-
-            api.uploadFiles(eventId!!, arrayOf(fileToUpload))
-                .enqueue(object :Callback<ResponseUploadFile>{
-                    override fun onResponse(
-                        call: Call<ResponseUploadFile>,
-                        response: Response<ResponseUploadFile>
-                    ) {
-                        d("Success","Nice")
-                    }
-
-                    override fun onFailure(call: Call<ResponseUploadFile>, t: Throwable) {
-                        d("Failure","${t.message}")
-                    }
-
-                })
-
-
+            d("sel","$selectedPhotos")
+            uploadFiles(selectedPhotos)
 
         }
+
+
+//        if(requestCode == 2 && resultCode == RESULT_OK && data != null){
+//            pickedPhoto = data.data
+//            if(Build.VERSION.SDK_INT >= 28){
+//                val source = ImageDecoder.createSource(this.contentResolver, pickedPhoto!!)
+//                pickedBitMap = ImageDecoder.decodeBitmap(source)
+//                profile_picture.setImageBitmap(pickedBitMap)
+//            } else {
+//                pickedBitMap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedPhoto)
+//                profile_picture.setImageBitmap(pickedBitMap)
+//            }
+//
+//            val eventId = intent.getStringExtra("eventId")
+//            val file = File(getRealPathFromURI(pickedPhoto!!))
+//            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+//            val fileToUpload = MultipartBody.Part.createFormData("file", file.name, requestFile)
+//            d("----","$fileToUpload")
+//
+//            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+//            val token = sharedPreferences.getString("token", "")
+//            val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+//
+//            api.updatePicture("Bearer $token",fileToUpload)
+//                .enqueue(object :Callback<ResponseUploadPicture>{
+//                    override fun onResponse(
+//                        call: Call<ResponseUploadPicture>,
+//                        response: Response<ResponseUploadPicture>
+//                    ) {
+//                        d("ispratena","slika")
+//                    }
+//
+//                    override fun onFailure(call: Call<ResponseUploadPicture>, t: Throwable) {
+//                        d("Failure","----------------------")
+//                    }
+//                })
+//
+//
+//        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun getRealPathFromURI(uri: Uri): String {
-        val cursor = contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            it.moveToFirst()
-            val idx = it.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            return it.getString(idx)
+    private fun uploadFiles(selectedPhotos: MutableList<Uri>) {
+        val files = mutableListOf<File>()
+        val paths = getRealPathsFromURIs(selectedPhotos)
+        for (path in paths) {
+            val file = File(path)
+            files.add(file)
         }
-        return ""
+        val request = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .apply {
+                for (file in files) {
+                    addFormDataPart("file[]", file.name, file.asRequestBody("image/*".toMediaTypeOrNull()))
+                }
+            }
+            .build()
+
+        d("Nesto","$request")
+
+        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("token", "")
+            val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+            val eventId = intent.getStringExtra("eventId")
+
+            api.uploadFiles("Bearer $token",eventId, request).enqueue(object :Callback<ResponseUploadFile>{
+                override fun onResponse(
+                    call: Call<ResponseUploadFile>,
+                    response: Response<ResponseUploadFile>
+                ) {
+                    d("Good","Success")
+                }
+
+                override fun onFailure(call: Call<ResponseUploadFile>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+
+    }
+
+
+
+    @SuppressLint("Range")
+    fun getRealPathsFromURIs(uris: MutableList<Uri>): List<String> {
+        val paths = mutableListOf<String>()
+        for (uri in uris) {
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            cursor?.moveToFirst()
+            val path = cursor?.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            cursor?.close()
+            path?.let { paths.add(it) }
+        }
+        return paths
     }
 
 

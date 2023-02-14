@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
 import kotlinx.android.synthetic.main.activity_add_event.*
+import pictale.mk.auth.AuthToken
 import pictale.mk.events.APIv2
 import pictale.mk.events.AddEventBody
 import pictale.mk.events.ResponseAddEvent
@@ -38,11 +39,11 @@ class AddEventActivity : AppCompatActivity() {
             val public = add_isPublic.isChecked()
             val location = add_location.text.toString()
 
-            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("token", "")
+            val token =AuthToken.get(this)
 
             val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
             val addDTO= AddEventBody(collaboration, description, public, location, name, tags)
+
             api.addEvent("Bearer $token",addDTO)
                 .enqueue(object : Callback<ResponseAddEvent> {
                 override fun onResponse(
@@ -63,17 +64,12 @@ class AddEventActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Token>>>", "$token")
         updateUI()
 
     }
 
     private fun updateUI() {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Tokenot od AddEvent", "$token")
+        val token = AuthToken.get(this)
         if (token==""){
             startActivity(Intent(this,LoginActivity::class.java))
         }

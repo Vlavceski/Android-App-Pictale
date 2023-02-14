@@ -8,6 +8,7 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_home.*
+import pictale.mk.auth.AuthToken
 import pictale.mk.fragments.AllEventsFragment
 import pictale.mk.fragments.FavEventsFragment
 import pictale.mk.fragments.HighlightsFragment
@@ -21,7 +22,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
 
         add_event.setOnClickListener {
             startActivity(Intent(this,AddEventActivity::class.java))
@@ -56,7 +56,6 @@ class HomeActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("token", null).apply()
         updateUI()
-
     }
 
 
@@ -72,28 +71,17 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-
-
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-
-        d("Token>>>","$token")
         updateUI()
     }
 
     private fun updateUI() {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        d("Tokenot od home","$token")
-
-        if (token==""){
+        val token=AuthToken.get(this)
+        if (token==null){
             startActivity(Intent(this,LoginActivity::class.java))
         }
-
     }
-
 
 }
 

@@ -28,17 +28,13 @@ class ChangeInfoActivity : AppCompatActivity() {
             var currName:String
             var currSurname:String
 
-            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("token", "")
+            val token = AuthToken.get(this)
             val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
 
-            Log.d("setting_token-->", "$token")
 
             api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
                 override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
-                    Log.d("Profile_response-->", "${response.body()}")
                     if (response.isSuccessful) {
-                        Log.d("in R-->", response.body()?.email.toString())
                         currName=response.body()?.firstName.toString()
                         currSurname=response.body()?.lastName.toString()
                         var name:String
@@ -61,8 +57,6 @@ class ChangeInfoActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
-                    Toast.makeText(this@ChangeInfoActivity, t.message, Toast.LENGTH_SHORT)
-                        .show()
                     t.message?.let { Log.d("Login_failure-->", it) }
                 }
             })
@@ -73,25 +67,20 @@ class ChangeInfoActivity : AppCompatActivity() {
     }
 
     private fun updateInfo(name: String, surname: String) {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
+        val token = AuthToken.get(this)
+
         val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
 
-        d("setting_token-->", "$token")
         val update=UpdateInfo(name,surname)
         api.updateInfo("Bearer $token",update).enqueue(object :Callback<ResponseUpdateInfo>{
             override fun onResponse(call: Call<ResponseUpdateInfo>, response: Response<ResponseUpdateInfo>) {
-                d("setting_response-->", "${response.body()}")
-                if (response.isSuccessful) {
-                    d("Changed- Success "," Ok!!!")
-                    startActivity(Intent(this@ChangeInfoActivity, SettingActivity::class.java))
 
+                if (response.isSuccessful) {
+                    startActivity(Intent(this@ChangeInfoActivity, SettingActivity::class.java))
                 }
             }
 
             override fun onFailure(call: Call<ResponseUpdateInfo>, t: Throwable) {
-                Toast.makeText(this@ChangeInfoActivity, t.message, Toast.LENGTH_SHORT)
-                    .show()
                 t.message?.let { Log.d("Login_failure-->", it) }
             }
         })
@@ -100,16 +89,11 @@ class ChangeInfoActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Token>>>", "$token")
         updateUI()
 
     }
     private fun updateUI() {
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        Log.d("Tokenot od home", "$token")
+        val token = AuthToken.get(this)
         if (token==""){
             startActivity(Intent(this,LoginActivity::class.java))
         }
