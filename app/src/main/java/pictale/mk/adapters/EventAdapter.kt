@@ -67,8 +67,6 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                 val location=response.body()?.location.toString()
                 val eventId=response.body()?.eventId.toString()
                 val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
-//                d("EVENT_FILES_LIST--","${eventFilesList}")
-
 
 
                 val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }

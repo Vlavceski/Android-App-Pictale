@@ -1,22 +1,26 @@
 package pictale.mk
 
+import android.*
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log.d
-import android.widget.Toast
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_splash_screen.*
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -28,11 +32,13 @@ import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class DetailsActivity : AppCompatActivity() {
-
-    private var selectedImageUri: Uri? = null
+    var pickedPhoto: Uri? = null
+    var pickedBitMap: Bitmap? = null
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,27 +51,10 @@ class DetailsActivity : AppCompatActivity() {
         rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
         rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString)
 
-
         add_file.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(READ_EXTERNAL_STORAGE),
-                    SELECT_IMAGE_PERMISSION_REQUEST_CODE
-                )
-            } else {
-                selectImage()
-            }
+            pickedPhoto(it)
         }
 
-        upload_file.setOnClickListener {
-            if (selectedImageUri == null) {
-                Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            uploadImage(eventId)
-        }
 
         name_of_event.text = eventName
         location_of_event.text = eventLocation
@@ -96,33 +85,67 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
-    private fun uploadImage(eventId: String?) {
-        val image = selectedImageUri ?: return
-        val imageBody = createImageBody(image)
-        val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", "")
-        val api=RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
-
-        api.uploadFiles("Bearer $token",eventId!!,imageBody).enqueue(object :Callback<ResponseUploadFile>{
-            override fun onResponse(
-                call: Call<ResponseUploadFile>,
-                response: Response<ResponseUploadFile>
-            ) {
-                d("Success","Good")
-            }
-
-            override fun onFailure(call: Call<ResponseUploadFile>, t: Throwable) {
-                d("Failure","${t.message}")
-            }
-
-        })
-
+    //Upload Image from Gallery
+    fun pickedPhoto (view: View) {
+        if(ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(READ_EXTERNAL_STORAGE), 1)
+        } else {
+            val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(galleryIntext, 2)
+        }
     }
+    //Upload Image from Gallery
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray ) {
+        if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(galleryIntext, 2)
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+    //Upload Image from Gallery
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == 2 && resultCode == RESULT_OK && data != null){
+            pickedPhoto = data.data
+            if(Build.VERSION.SDK_INT >= 28){
+                val source = ImageDecoder.createSource(this.contentResolver, pickedPhoto!!)
+                pickedBitMap = ImageDecoder.decodeBitmap(source)
+                img_upload.setImageBitmap(pickedBitMap)
+            } else {
+                pickedBitMap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedPhoto)
+                img_upload.setImageBitmap(pickedBitMap)
+            }
+            val file = File(getRealPathFromURI(pickedPhoto!!))
+            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+            val fileToUpload = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-    private fun createImageBody(image: Uri): MultipartBody.Part {
-        val file = File(getRealPathFromURI(image))
-        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-        return MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val eventId = intent.getStringExtra("eventId")
+            val api=RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+            val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("token", "")
+            d("@@@@","$eventId")
+            d("@@@@","$fileToUpload")
+            d("@@@@","$token")
+
+            api.uploadFiles(eventId!!, arrayOf(fileToUpload))
+                .enqueue(object :Callback<ResponseUploadFile>{
+                    override fun onResponse(
+                        call: Call<ResponseUploadFile>,
+                        response: Response<ResponseUploadFile>
+                    ) {
+                        d("Success","Nice")
+                    }
+
+                    override fun onFailure(call: Call<ResponseUploadFile>, t: Throwable) {
+                        d("Failure","${t.message}")
+                    }
+
+                })
+
+
+
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun getRealPathFromURI(uri: Uri): String {
@@ -135,42 +158,7 @@ class DetailsActivity : AppCompatActivity() {
         return ""
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == SELECT_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data
-        }
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        d("-----","$requestCode----$permissions ---$grantResults")
-        if (requestCode == SELECT_IMAGE_PERMISSION_REQUEST_CODE &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            selectImage()
-        } else {
-            Toast.makeText(this, "Permission to read external storage is required to select image", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
-    private fun selectImage() {
-        val intent = Intent().apply {
-            type = "image/*"
-            action = Intent.ACTION_GET_CONTENT
-        }
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_IMAGE_REQUEST_CODE)
-
-    }
-
-    companion object {
-        private const val SELECT_IMAGE_REQUEST_CODE = 1
-        private const val SELECT_IMAGE_PERMISSION_REQUEST_CODE = 2
-    }
 }
 
 
