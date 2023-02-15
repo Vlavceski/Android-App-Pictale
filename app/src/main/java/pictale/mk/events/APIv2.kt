@@ -2,6 +2,7 @@ package pictale.mk.events
 
 import okhttp3.MultipartBody
 import pictale.mk.auth.responses.ResponseAllEvents
+import pictale.mk.auth.responses.ResponseUploadPicture
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -26,12 +27,11 @@ interface APIv2 {
     fun deleteEventFav(@Header("Authorization") token: String?,@Query("eventId") eventId: String):Call<ResponseDeleteFav>
 
     @Multipart
-    @FormUrlEncoded
-    @POST("api/v2/event/upload-multiple-files")
+    @POST("event/upload-multiple-files")
     fun uploadFiles(
         @Header("Authorization") token: String?,
-        @Part eventId:String?,
-        @Field("file") file: List<MultipartBody>
+        @Query("eventId")  eventId:String?,
+        @Part file: MultipartBody.Part
     ): Call<ResponseUploadFile>
 
 }
