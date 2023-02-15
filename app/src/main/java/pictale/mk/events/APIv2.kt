@@ -26,11 +26,12 @@ interface APIv2 {
     fun deleteEventFav(@Header("Authorization") token: String?,@Query("eventId") eventId: String):Call<ResponseDeleteFav>
 
     @Multipart
+    @FormUrlEncoded
     @POST("api/v2/event/upload-multiple-files")
     fun uploadFiles(
         @Header("Authorization") token: String?,
         @Part eventId:String?,
-        @Part file: MultipartBody
+        @Field("file") file: List<MultipartBody>
     ): Call<ResponseUploadFile>
 
 }

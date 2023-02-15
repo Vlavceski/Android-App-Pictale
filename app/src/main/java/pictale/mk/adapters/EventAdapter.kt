@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlinx.android.synthetic.main.item_event_layout.view.*
 import pictale.mk.DetailsActivity
@@ -51,6 +54,11 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
         fun bindData(data: ResponseAllEvents) {
             itemView.location_event.text = data.location
             itemView.tittle_event.text = data.name
+
+            Glide.with(context)
+                    .load(data.thumbnailUrl)
+                    .transform(CircleCrop())
+                    .into(itemView.img_event)
 
         }
     }

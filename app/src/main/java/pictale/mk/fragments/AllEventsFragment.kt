@@ -86,7 +86,6 @@ class AllEventsFragment : Fragment() {
         val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
         api.getPublicEvents("public").enqueue(object : Callback<List<ResponseAllEvents>> {
             override fun onResponse(call: Call<List<ResponseAllEvents>>, response: Response<List<ResponseAllEvents>>) {
-                d("Allevents_response-->", "${response.body()}")
                 if (response.code()==200) {
                     d("in Response-->", "${response.body()}")
                     val apiData = response.body()

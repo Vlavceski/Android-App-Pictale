@@ -84,13 +84,18 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     fun pickedPhoto (view: View) {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-        } else {
-            val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(galleryIntext, 2)
-        }
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2)
+
+//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+//            != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+//        } else {
+//            val galleryIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//            startActivityForResult(galleryIntext, 2)
+//        }
     }
     //Upload Image from Gallery
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray ) {
@@ -157,9 +162,11 @@ class DetailsActivity : AppCompatActivity() {
 //                        d("Failure","----------------------")
 //                    }
 //                })
-//
-//
 //        }
+
+
+
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -170,7 +177,8 @@ class DetailsActivity : AppCompatActivity() {
             val file = File(path)
             files.add(file)
         }
-        val request = MultipartBody.Builder()
+
+        val request= MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .apply {
                 for (file in files) {
@@ -178,15 +186,15 @@ class DetailsActivity : AppCompatActivity() {
                 }
             }
             .build()
-
-        d("Nesto","$request")
+        val listImages= listOf<MultipartBody>(request)
+        d("Nesto","$listImages")
 
         val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
             val token = sharedPreferences.getString("token", "")
             val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
             val eventId = intent.getStringExtra("eventId")
 
-            api.uploadFiles("Bearer $token",eventId, request).enqueue(object :Callback<ResponseUploadFile>{
+            api.uploadFiles("Bearer $token",eventId, listImages).enqueue(object :Callback<ResponseUploadFile>{
                 override fun onResponse(
                     call: Call<ResponseUploadFile>,
                     response: Response<ResponseUploadFile>
