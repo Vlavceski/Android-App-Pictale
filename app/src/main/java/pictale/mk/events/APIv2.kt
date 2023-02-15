@@ -34,4 +34,16 @@ interface APIv2 {
         @Part file: MultipartBody.Part
     ): Call<ResponseUploadFile>
 
+
+
+    @GET("event/pageable/findAllByParameter")
+    fun getPages(
+        @Query("eventPublicityType")  eventPublicityType :String?,
+        @Query("page")  page:String?,
+        @Query("size")  size:String?,
+    ): Call<ResponsePages>
+
+
+
+
 }
