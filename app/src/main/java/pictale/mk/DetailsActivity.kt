@@ -2,6 +2,7 @@ package pictale.mk
 
 import android.*
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,8 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log.d
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -51,7 +50,7 @@ class DetailsActivity : AppCompatActivity() {
         val imageUrisString = intent.getSerializableExtra("imageUrisString") as List<Uri>
 
         rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
-        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString)
+        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
 
         add_file.setOnClickListener {
             pickedPhoto(it)
@@ -93,8 +92,12 @@ class DetailsActivity : AppCompatActivity() {
                         addToFav()
                         true
                     }
+                    R.id.update_thumbnail -> {
+                        startActivity(Intent(this,UploadThumbnail::class.java))
+                        true
+                    }
                     R.id.delete_event -> {
-                        // Handle menu item 2
+
                         true
                     }
                     else -> false
@@ -106,7 +109,10 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
-private fun addToFav(){
+
+
+
+    private fun addToFav(){
     val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
     val token = sharedPreferences.getString("token", "")
 

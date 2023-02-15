@@ -86,7 +86,6 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                     intent.putExtra("name", name)
                     intent.putExtra("eventId", eventId)
                     intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
-//                    d("-----------","$imageUris")
                     intent.putExtra("location", location)
                     context.startActivity(intent)
                  }

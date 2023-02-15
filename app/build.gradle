@@ -75,22 +75,9 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.1"
     implementation "com.squareup.okio:okio:2.9.0"
 
-
-    def paging_version = "3.0.0"
     //noinspection GradleDependency
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    // alternatively - without Android dependencies for tests
-    testImplementation "androidx.paging:paging-common-ktx:$paging_version"
-    // optional - RxJava2 support
+    implementation "androidx.paging:paging-runtime-ktx:2.1.1"
     //noinspection GradleDependency
-    implementation "androidx.paging:paging-rxjava2-ktx:$paging_version"
-    // optional - RxJava3 suppor
-    //noinspection GradleDependency
-    implementation "androidx.paging:paging-rxjava3:$paging_version"
-    // optional - Guava ListenableFuture support
-    //noinspection GradleDependency
-    implementation "androidx.paging:paging-guava:$paging_version"
-    // Jetpack Compose Integration
-    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
+    testImplementation "androidx.paging:paging-common-ktx:2.1.1"
 
 }

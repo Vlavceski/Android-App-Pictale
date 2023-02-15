@@ -2,18 +2,17 @@ package pictale.mk.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import pictale.mk.R
-import pictale.mk.events.EventFile
 
 
-class ImageAdapter(val context: Context, private val items: List<Uri>) :
+class ImageAdapter(val context: Context, private val items: List<Uri>, eventId: String?) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +26,14 @@ class ImageAdapter(val context: Context, private val items: List<Uri>) :
             .load(item)
             .centerCrop()
             .into(holder.picture)
+
+        val id = items[position]
+        holder.picture.setOnClickListener {
+            d("click-pic","$id")
+        }
     }
+
+
 
     override fun getItemCount(): Int {
         return items.size
@@ -35,7 +41,11 @@ class ImageAdapter(val context: Context, private val items: List<Uri>) :
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val picture: ImageView = itemView.findViewById(R.id.image_card)
-//        val fileName: TextView = itemView.findViewById(R.id.itemId)
+
+    }
+
+    private fun openDetails(id: Any) {
+
     }
 }
 

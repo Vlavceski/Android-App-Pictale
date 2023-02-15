@@ -34,14 +34,22 @@ interface APIv2 {
         @Part file: MultipartBody.Part
     ): Call<ResponseUploadFile>
 
+    @Multipart
+    @POST("event/upload-event-thumbnail")
+    fun uploadThumbnail(
+        @Header("Authorization") token: String?,
+        @Query("eventId")  eventId:String?,
+        @Part file: MultipartBody.Part
+    ): Call<ResponseUpdateThumbnail>
 
+    //APi for pages
+//    @GET("event/pageable/findAllByParameter")
+//    fun getPages(
+//        @Query("eventPublicityType")  eventPublicityType :String?,
+//        @Query("page")  page:String?,
+//        @Query("size")  size:String?,
+//    ): Call<ResponsePages>
 
-    @GET("event/pageable/findAllByParameter")
-    fun getPages(
-        @Query("eventPublicityType")  eventPublicityType :String?,
-        @Query("page")  page:String?,
-        @Query("size")  size:String?,
-    ): Call<ResponsePages>
 
 
 
