@@ -2,8 +2,6 @@ package pictale.mk.events
 
 import okhttp3.MultipartBody
 import pictale.mk.auth.responses.ResponseAllEvents
-import pictale.mk.auth.responses.ResponseUploadPicture
-import pictale.mk.pages.ResponsePages
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -47,10 +45,10 @@ interface APIv2 {
     //APi for pages
     @GET("event/pageable/findAllByParameter")
     fun getPages(
-        @Query("eventPublicityType")  eventPublicityType :String?,
-        @Query("page")  page:String?,
-        @Query("size")  size:String?,
-    ): Call<ResponsePages>
+        @Query("eventPublicityType") eventPublicityType: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+    ): Call<ResponseAllEventsPages>
 
 
 

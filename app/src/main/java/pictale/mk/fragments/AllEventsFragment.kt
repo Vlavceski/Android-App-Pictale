@@ -14,8 +14,11 @@ import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlinx.android.synthetic.main.item_event_layout.*
 import pictale.mk.R
 import pictale.mk.adapters.EventAdapter
+import pictale.mk.adapters.PageableEventAdapter
 import pictale.mk.auth.responses.ResponseAllEvents
 import pictale.mk.events.APIv2
+import pictale.mk.events.Event
+import pictale.mk.events.ResponseAllEventsPages
 import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,12 +74,55 @@ class AllEventsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                fetchData()
+//                fetchData()
                 return false
             }
         })
+        fetchDataWithPages()
+    }
 
-        fetchData()
+    private fun fetchDataWithPages(){
+
+        val api=RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+        val valuePageable = "public"
+        var currentPage = 0
+        val sizePageable =3
+        var totalNumberOfPages:Int
+        api.getPages(eventPublicityType = valuePageable, page = currentPage, size = sizePageable)
+            .enqueue(object: Callback<ResponseAllEventsPages>{
+                override fun onResponse(call: Call<ResponseAllEventsPages>, response: Response<ResponseAllEventsPages>) {
+                    val eventsList = mutableListOf<Event>()
+                    if (response.code() == 200) {
+                        val pageableEvents = response.body()
+                        if (pageableEvents != null) {
+                            eventsList.addAll(pageableEvents.content)
+                            recyclerView = view!!.findViewById(R.id.rvEventsList)
+                            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                            if (currentPage == 0) {
+                                recyclerView.adapter = PageableEventAdapter(requireContext(), eventsList)
+                                totalNumberOfPages = pageableEvents.totalPages
+                            }
+//                            else {
+////                                (recyclerView.adapter as PageableEventAdapter).addAll(pageableEvents.content)
+//                            }
+                            if (!pageableEvents.last) {
+                                currentPage++
+                                eventsList.clear()
+//                                listAllEventsPageable()
+                            }
+                        }
+                    } else {
+                        val errorMessage = (response.errorBody())?.string()
+                        if (errorMessage != null) {
+                            Log.d("HomeFragment->ERROR", errorMessage)
+                        }
+                    }
+                    }
+
+                override fun onFailure(call: Call<ResponseAllEventsPages>, t: Throwable) {
+                    d("Failure","${t.message}")
+                }
+            })
     }
 
 
