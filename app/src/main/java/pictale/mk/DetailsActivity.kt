@@ -2,7 +2,6 @@ package pictale.mk
 
 import android.*
 import android.Manifest
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log.d
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +27,9 @@ import kotlinx.android.synthetic.main.activity_splash_screen.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import pictale.mk.access.APIv3
+import pictale.mk.access.ResponseListAll
+import pictale.mk.access.RetrofitInstanceV3
 import pictale.mk.adapters.ImageAdapter
 import pictale.mk.events.APIv2
 import pictale.mk.events.ResponseInsertFav
@@ -96,6 +99,10 @@ class DetailsActivity : AppCompatActivity() {
                         startActivity(Intent(this,UploadThumbnail::class.java))
                         true
                     }
+                    R.id.people -> {
+                        getUsers(eventId)
+                        true
+                    }
                     R.id.delete_event -> {
 
                         true
@@ -109,7 +116,48 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
+    private fun getUsers(eventId: String?) {
+        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+        api.getListAllUsersForAccessInEvent(eventId!!)
+            .enqueue(object : Callback<List<ResponseListAll>>{
+                override fun onResponse(
+                    call: Call<List<ResponseListAll>>,
+                    response: Response<List<ResponseListAll>>
+                ) {
+                    val res=response.body()
+                    openDialog(res)
+                }
 
+                override fun onFailure(call: Call<List<ResponseListAll>>, t: Throwable) {
+                    d("failure","")
+                }
+            })
+
+    }
+
+    private fun openDialog(res: List<ResponseListAll>?) {
+        val personNames = res?.map { "${it.firstName} ${it.lastName}" }?.toTypedArray()
+
+        val builder = AlertDialog.Builder(this@DetailsActivity)
+//        builder.setTitle("Dialog Title")
+//        builder.setMessage("Dialog message goes here.")
+        if (res==null){
+            builder.setTitle("Sorry, there is none waiting to be approved in this event yet!")
+        }
+        builder.setItems(personNames) { _, position ->
+            // Handle selection of a person
+            val selectedPerson = res?.get(position)
+            // Do something with the selected person, such as displaying their details
+        }
+        builder.setPositiveButton("OK") { dialog, which ->
+            // do something when OK button is clicked
+        }
+//        builder.setNegativeButton("Cancel") { dialog, which ->
+//            // do something when Cancel button is clicked
+//        }
+        val dialog = builder.create()
+        dialog.show()
+    }
 
 
     private fun addToFav(){
@@ -209,6 +257,7 @@ class DetailsActivity : AppCompatActivity() {
 
 
 }
+
 
 
 

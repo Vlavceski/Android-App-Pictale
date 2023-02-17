@@ -1,7 +1,7 @@
 package pictale.mk.events
 
 data class ResponseAllEventsPages(
-        val content: List<Event>,
+        val content: List<Eventt>,
         val empty: Boolean,
         val first: Boolean,
         val last: Boolean,
@@ -14,9 +14,9 @@ data class ResponseAllEventsPages(
         val totalPages: Int
     )
 
-    data class Event(
+    data class Eventt(
         val collaboration: String,
-        val createdBy: CreatedBy,
+        val createdBy: CreatedByy,
         val dateCreated: Long,
         val description: String,
         val eventId: String,
@@ -27,9 +27,9 @@ data class ResponseAllEventsPages(
         val thumbnailUrl: String
     )
 
-//    data class CreatedBy(
-//        val firstName: String,
-//        val id: String,
-//        val lastName: String,
-//        val pictureUrl: String
-//    )
+    data class CreatedByy(
+        val firstName: String,
+        val id: String,
+        val lastName: String,
+        val pictureUrl: String
+    )

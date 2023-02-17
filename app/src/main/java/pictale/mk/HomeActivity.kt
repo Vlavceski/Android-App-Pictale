@@ -78,6 +78,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateUI() {
         val token=AuthToken.get(this)
+        d("token","$token")
         if (token==null){
             startActivity(Intent(this,LoginActivity::class.java))
         }

@@ -16,10 +16,7 @@ import pictale.mk.R
 import pictale.mk.adapters.EventAdapter
 import pictale.mk.adapters.PageableEventAdapter
 import pictale.mk.auth.responses.ResponseAllEvents
-import pictale.mk.events.APIv2
-import pictale.mk.events.Event
-import pictale.mk.events.ResponseAllEventsPages
-import pictale.mk.events.RetrofitInstanceV2
+import pictale.mk.events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +26,10 @@ import retrofit2.Response
 class AllEventsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EventAdapter
-
+   private  val valuePageable = "public"
+    private var currentPage = 0
+    private val sizePageable =3
+   private var totalNumberOfPages:Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +74,7 @@ class AllEventsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-//                fetchData()
+                fetchDataWithPages()
                 return false
             }
         })
@@ -84,31 +84,27 @@ class AllEventsFragment : Fragment() {
     private fun fetchDataWithPages(){
 
         val api=RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
-        val valuePageable = "public"
-        var currentPage = 0
-        val sizePageable =3
-        var totalNumberOfPages:Int
-        api.getPages(eventPublicityType = valuePageable, page = currentPage, size = sizePageable)
+
+        api.getPages(valuePageable,currentPage,sizePageable)
             .enqueue(object: Callback<ResponseAllEventsPages>{
                 override fun onResponse(call: Call<ResponseAllEventsPages>, response: Response<ResponseAllEventsPages>) {
-                    val eventsList = mutableListOf<Event>()
+                    val eventsList = mutableListOf<Eventt>()
                     if (response.code() == 200) {
                         val pageableEvents = response.body()
                         if (pageableEvents != null) {
                             eventsList.addAll(pageableEvents.content)
-                            recyclerView = view!!.findViewById(R.id.rvEventsList)
-                            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                            rvEventsList.layoutManager = LinearLayoutManager(requireContext())
                             if (currentPage == 0) {
-                                recyclerView.adapter = PageableEventAdapter(requireContext(), eventsList)
+                                rvEventsList.adapter = PageableEventAdapter(requireContext(), eventsList)
                                 totalNumberOfPages = pageableEvents.totalPages
                             }
-//                            else {
-////                                (recyclerView.adapter as PageableEventAdapter).addAll(pageableEvents.content)
-//                            }
+                            else {
+                                (rvEventsList.adapter as PageableEventAdapter).addAll(pageableEvents.content)
+                            }
                             if (!pageableEvents.last) {
                                 currentPage++
                                 eventsList.clear()
-//                                listAllEventsPageable()
+                                fetchDataWithPages()
                             }
                         }
                     } else {

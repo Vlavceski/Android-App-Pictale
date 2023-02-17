@@ -26,13 +26,13 @@ class AddEventActivity : AppCompatActivity() {
         }
         add.setOnClickListener {
             val name = add_name.text.toString()
-            var collaboration ="ROLE_ANYONE"
+            var collaboration ="ANYONE"
             val anyone=ROLE_ANYONE.isChecked
             val editors=ROLE_EDITORS.isChecked
             val self=ROLE_SELF.isChecked
-            if (anyone){collaboration="ROLE_ANYONE"}
-            if (editors){collaboration="ROLE_EDITORS"}
-            if (self){collaboration="ROLE_SELF"}
+            if (anyone){collaboration="ANYONE"}
+            if (editors){collaboration="EDITORS_ONLY"}
+            if (self){collaboration="ONLY_ME?"}
             val description = add_description.text.toString()
             val array = add_tags.text.toString()
             val tags=array.split(" ")
