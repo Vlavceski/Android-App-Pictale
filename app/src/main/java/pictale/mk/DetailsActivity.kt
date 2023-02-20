@@ -12,6 +12,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Log.d
 import android.view.View
 import android.widget.*
@@ -28,9 +29,14 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import pictale.mk.access.APIv3
+import pictale.mk.access.ResponseAccessInEvent
 import pictale.mk.access.ResponseListAll
 import pictale.mk.access.RetrofitInstanceV3
 import pictale.mk.adapters.ImageAdapter
+import pictale.mk.auth.API
+import pictale.mk.auth.AuthToken
+import pictale.mk.auth.RetrofitInstance
+import pictale.mk.auth.responses.LoggedResponse
 import pictale.mk.events.APIv2
 import pictale.mk.events.ResponseInsertFav
 import pictale.mk.events.ResponseUploadFile
@@ -87,6 +93,7 @@ class DetailsActivity : AppCompatActivity() {
         }
 
         menu_icon.setOnClickListener {
+            var creator=creator(eventId)
             val popupMenu = PopupMenu(this, menu_icon)
             popupMenu.inflate(R.menu.details_menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
@@ -103,8 +110,12 @@ class DetailsActivity : AppCompatActivity() {
                         getUsers(eventId)
                         true
                     }
-                    R.id.delete_event -> {
+                    R.id.request -> {
+                        makeRequest(eventId)
+                        true
+                    }
 
+                    R.id.delete_event -> {
                         true
                     }
                     else -> false
@@ -116,6 +127,53 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
+    private fun creator(eventId: String?): Boolean {
+    //napisi fun za creator
+    }
+
+    private fun makeRequest(eventId: String?) {
+            val token= AuthToken.get(this@DetailsActivity)
+            val api= RetrofitInstance.getRetrofitInstance().create(API::class.java)
+            api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
+                override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
+                    if (response.code()==200) {
+                        var userId=response.body()?.id
+                        accessWithIds(userId,eventId!!)
+                        d("response-send","user- $userId, event- $eventId")
+                    }
+                }
+
+                override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
+                    t.message?.let { Log.d("Login_failure-->", it) }
+                }
+            })
+
+        }
+
+        private fun accessWithIds(userId: String?, eventId: String) {
+            val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+            api.accessInEvent(eventId,userId!!).enqueue(object :Callback<ResponseAccessInEvent>{
+                override fun onResponse(
+                    call: Call<ResponseAccessInEvent>,
+                    response: Response<ResponseAccessInEvent>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@DetailsActivity, "${response.body()}", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@DetailsActivity, "${response.errorBody()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseAccessInEvent>, t: Throwable) {
+                    d("Failure","${t.message}")
+                }
+
+            })
+        }
+
+
+
+
     private fun getUsers(eventId: String?) {
         val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
         api.getListAllUsersForAccessInEvent(eventId!!)
@@ -125,6 +183,7 @@ class DetailsActivity : AppCompatActivity() {
                     response: Response<List<ResponseListAll>>
                 ) {
                     val res=response.body()
+                    d("response-users","${response.body()}")
                     openDialog(res)
                 }
 

@@ -22,14 +22,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 class AllEventsFragment : Fragment() {
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: EventAdapter
    private  val valuePageable = "public"
-    private var currentPage = 0
-    private val sizePageable =3
-   private var totalNumberOfPages:Int = 0
+    private var currentPage: Int = 0
+    private val sizePageable: Int = 10
+    private var totalNumberOfPages: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,11 +71,13 @@ class AllEventsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                fetchDataWithPages()
+//                fetchDataWithPages()
+//                fetchData()
                 return false
             }
         })
-        fetchDataWithPages()
+                        fetchDataWithPages()
+//        fetchData()
     }
 
     private fun fetchDataWithPages(){
@@ -91,6 +90,7 @@ class AllEventsFragment : Fragment() {
                     val eventsList = mutableListOf<Eventt>()
                     if (response.code() == 200) {
                         val pageableEvents = response.body()
+
                         if (pageableEvents != null) {
                             eventsList.addAll(pageableEvents.content)
                             rvEventsList.layoutManager = LinearLayoutManager(requireContext())

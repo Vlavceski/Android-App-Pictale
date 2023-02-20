@@ -4,20 +4,31 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.item_event_layout.view.*
 import pictale.mk.DetailsActivity
 import pictale.mk.R
+import pictale.mk.access.APIv3
+import pictale.mk.access.ResponseAccessInEvent
+import pictale.mk.access.RetrofitInstanceV3
+import pictale.mk.auth.API
+import pictale.mk.auth.AuthToken
+import pictale.mk.auth.RetrofitInstance
+import pictale.mk.auth.responses.LoggedResponse
 import pictale.mk.events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.create
 
 class PageableEventAdapter(private val context: Context, var data: MutableList<Eventt>)
     : RecyclerView.Adapter<PageableEventAdapter.ViewHolder>() {
@@ -37,9 +48,52 @@ class PageableEventAdapter(private val context: Context, var data: MutableList<E
 
         val id = data[position].eventId
         holder.card.setOnClickListener {
+//            accessInEvent(id)
             openDetails(id)
+
         }
     }
+
+    private fun accessInEvent(eventId: String) {
+        val token=AuthToken.get(context)
+        val api= RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
+            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
+                if (response.code()==200) {
+                    var userId=response.body()?.id
+                    accessWithIds(userId,eventId)
+                    d("response-send","user- $userId, event- $eventId")
+                }
+            }
+
+            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
+                t.message?.let { Log.d("Login_failure-->", it) }
+            }
+        })
+
+    }
+
+    private fun accessWithIds(userId: String?, eventId: String) {
+        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+        api.accessInEvent(eventId,userId!!).enqueue(object :Callback<ResponseAccessInEvent>{
+            override fun onResponse(
+                call: Call<ResponseAccessInEvent>,
+                response: Response<ResponseAccessInEvent>
+            ) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, "${response.body()}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "${response.errorBody()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseAccessInEvent>, t: Throwable) {
+                d("Failure","${t.message}")
+            }
+
+        })
+    }
+
 
 
 

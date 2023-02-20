@@ -40,14 +40,21 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+
+
+
+
         data[position].let { holder.bindData(it) }
         val id = data[position].eventId
         holder.card.setOnClickListener {
-            openDetails(id)
+             openDetails(id)
         }
 
 
     }
+
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val card = itemView.findViewById<CardView>(R.id.open_event)
