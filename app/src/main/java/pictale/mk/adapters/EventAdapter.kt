@@ -41,10 +41,6 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-
-
-
-
         data[position].let { holder.bindData(it) }
         val id = data[position].eventId
         holder.card.setOnClickListener {
@@ -87,7 +83,6 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                 val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
                 if (imageUrisString != null) {
                     var imageUris: ArrayList<Uri>
-
                      imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>
                     val intent = Intent(context, DetailsActivity::class.java)
                     intent.putExtra("name", name)

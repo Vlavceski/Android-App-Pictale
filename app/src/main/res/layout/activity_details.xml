@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailsActivity"
-    android:background="#CDDC39">
+    android:background="#76DD5A">
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -36,7 +36,7 @@
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/eventClicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event"
@@ -82,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/eventClicker"
         app:layout_constraintVertical_bias="0.023" />
 
 

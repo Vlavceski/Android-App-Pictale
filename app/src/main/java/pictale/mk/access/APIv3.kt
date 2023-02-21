@@ -1,17 +1,19 @@
 package pictale.mk.access
 
 import retrofit2.Call
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface APIv3 {
 
     @GET("private/event/user/list-all-users-for-access-in-event")
     fun getListAllUsersForAccessInEvent(
+        @Header("Authorization") token: String?,
         @Query("eventId") eventId: String): Call<List<ResponseListAll>>
 
+    @GET("/web/services/private/event/user/list-all-approved-users")
+    fun getListAllUsersWithPermissions(
+        @Header("Authorization") token: String?,
+        @Query("eventId") eventId: String): Call<List<ResponseUsersWithPermissions>>
 
     @POST("private/event/request-user-access-in-event")
     fun accessInEvent(
@@ -22,6 +24,7 @@ interface APIv3 {
 //    @FormUrlEncoded
     @POST("private/event/user/approve-user-access-in-event")
     fun approveAccessInEvent(
+        @Header("Authorization") token: String?,
         @Query("eventId") eventId: String,
         @Query("userCollaboration") userCollaboration:String,
         @Query("userId") userId:String
@@ -35,6 +38,7 @@ interface APIv3 {
 
     @DELETE("private/event/user/reject-access-in-event")
     fun rejectAccessInEvent(
+        @Header("Authorization") token: String?,
         @Query("eventId") eventId: String,
         @Query("userId") userId: String
     ):Call<ResponseReject>

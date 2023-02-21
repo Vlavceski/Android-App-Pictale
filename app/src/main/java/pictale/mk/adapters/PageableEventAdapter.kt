@@ -48,53 +48,10 @@ class PageableEventAdapter(private val context: Context, var data: MutableList<E
 
         val id = data[position].eventId
         holder.card.setOnClickListener {
-//            accessInEvent(id)
             openDetails(id)
 
         }
     }
-
-    private fun accessInEvent(eventId: String) {
-        val token=AuthToken.get(context)
-        val api= RetrofitInstance.getRetrofitInstance().create(API::class.java)
-        api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
-            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
-                if (response.code()==200) {
-                    var userId=response.body()?.id
-                    accessWithIds(userId,eventId)
-                    d("response-send","user- $userId, event- $eventId")
-                }
-            }
-
-            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
-                t.message?.let { Log.d("Login_failure-->", it) }
-            }
-        })
-
-    }
-
-    private fun accessWithIds(userId: String?, eventId: String) {
-        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
-        api.accessInEvent(eventId,userId!!).enqueue(object :Callback<ResponseAccessInEvent>{
-            override fun onResponse(
-                call: Call<ResponseAccessInEvent>,
-                response: Response<ResponseAccessInEvent>
-            ) {
-                if (response.isSuccessful) {
-                    Toast.makeText(context, "${response.body()}", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "${response.errorBody()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseAccessInEvent>, t: Throwable) {
-                d("Failure","${t.message}")
-            }
-
-        })
-    }
-
-
 
 
     fun addAll(events: List<Eventt>) {

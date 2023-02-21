@@ -25,11 +25,12 @@ import retrofit2.Response
 class AllEventsFragment : Fragment() {
    private  val valuePageable = "public"
     private var currentPage: Int = 0
-    private val sizePageable: Int = 10
+    private val sizePageable: Int = 4
     private var totalNumberOfPages: Int = 0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -71,7 +72,7 @@ class AllEventsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-//                fetchDataWithPages()
+                fetchDataWithPages()
 //                fetchData()
                 return false
             }

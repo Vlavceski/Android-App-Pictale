@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log.d
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import kotlinx.android.synthetic.main.activity_home.*
 import pictale.mk.auth.AuthToken
 import pictale.mk.fragments.AllEventsFragment
@@ -25,6 +28,10 @@ class HomeActivity : AppCompatActivity() {
 
         add_event.setOnClickListener {
             startActivity(Intent(this,AddEventActivity::class.java))
+        }
+
+        imageView5.setOnClickListener {
+            sendMessage()
         }
 
         toolbar_click.setOnMenuItemClickListener{
@@ -50,6 +57,35 @@ class HomeActivity : AppCompatActivity() {
             true
         }
 
+    }
+    private fun sendMessage() {
+        val message = "Hello, World!"
+        val topic = "news"
+        FirebaseMessaging.getInstance().send(
+            RemoteMessage.Builder("$topic@gcm.googleapis.com")
+                .setMessageId(java.util.UUID.randomUUID().toString())
+                .addData("message", message)
+                .build()
+        )
+    }
+
+
+
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.extras != null) {
+            val message = intent.extras?.getString("message")
+            if (message != null) {
+                // Handle the message
+                showMessage(message)
+            }
+        }
+    }
+
+    private fun showMessage(message: String) {
+        // Display the message to the user
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     private fun logout() {

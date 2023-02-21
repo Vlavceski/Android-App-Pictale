@@ -38,6 +38,13 @@
             {
               "client_id": "951994520319-79t4nnisp4ibbj4f94s72gthttljfcvp.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "951994520319-t2j6ofb0bfpala25ou7s4lhofrnl15v8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "inellipse.CustomRegistrationApp"
+              }
             }
           ]
         }
@@ -75,6 +82,13 @@
             {
               "client_id": "951994520319-79t4nnisp4ibbj4f94s72gthttljfcvp.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "951994520319-t2j6ofb0bfpala25ou7s4lhofrnl15v8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "inellipse.CustomRegistrationApp"
+              }
             }
           ]
         }

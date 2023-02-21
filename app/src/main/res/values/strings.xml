@@ -5,4 +5,5 @@
     <string name="my_profile">My Profile</string>
     <string name="logout">Logout</string>
     <string name="menu_icon_description">Menu</string>
+    <string name="default_notification_channel_id">Hello</string>
 </resources>

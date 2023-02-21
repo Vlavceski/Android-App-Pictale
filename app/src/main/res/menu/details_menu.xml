@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/return_start"
+        android:title="Return"/>
     <item
         android:id="@+id/add_fav"
         android:title="Add to favourite"/>
@@ -7,8 +11,11 @@
         android:id="@+id/update_thumbnail"
         android:title="Update Thumbnail"/>
     <item
-        android:id="@+id/people"
-        android:title="People"/>
+        android:id="@+id/users"
+        android:title="Users"/>
+    <item
+        android:id="@+id/usersForApprove"
+        android:title="Users for approve"/>
     <item
         android:id="@+id/request"
         android:title="Request"/>

@@ -2,6 +2,7 @@ package pictale.mk
 
 import android.*
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,7 +17,6 @@ import android.util.Log
 import android.util.Log.d
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,22 +25,19 @@ import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.back_page_click
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.activity_splash_screen.*
+import kotlinx.android.synthetic.main.fragment_all_events.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import pictale.mk.access.APIv3
-import pictale.mk.access.ResponseAccessInEvent
-import pictale.mk.access.ResponseListAll
-import pictale.mk.access.RetrofitInstanceV3
+import pictale.mk.access.*
+import pictale.mk.adapters.ApproveAdapter
 import pictale.mk.adapters.ImageAdapter
+import pictale.mk.adapters.UWPAdapter
 import pictale.mk.auth.API
 import pictale.mk.auth.AuthToken
 import pictale.mk.auth.RetrofitInstance
 import pictale.mk.auth.responses.LoggedResponse
-import pictale.mk.events.APIv2
-import pictale.mk.events.ResponseInsertFav
-import pictale.mk.events.ResponseUploadFile
-import pictale.mk.events.RetrofitInstanceV2
+import pictale.mk.events.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,6 +61,10 @@ class DetailsActivity : AppCompatActivity() {
         add_file.setOnClickListener {
             pickedPhoto(it)
         }
+        eventClicker.setOnClickListener {
+            startActivity(Intent(this@DetailsActivity,DetailsActivity::class.java))
+        }
+
 
         name_of_event.text = eventName
         location_of_event.text = eventLocation
@@ -93,11 +94,14 @@ class DetailsActivity : AppCompatActivity() {
         }
 
         menu_icon.setOnClickListener {
-            var creator=creator(eventId)
-            val popupMenu = PopupMenu(this, menu_icon)
+           val popupMenu = PopupMenu(this, menu_icon)
             popupMenu.inflate(R.menu.details_menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
+                    R.id.return_start -> {
+                        returnStart(eventId,imageUrisString)
+                        true
+                    }
                     R.id.add_fav -> {
                         addToFav()
                         true
@@ -106,8 +110,12 @@ class DetailsActivity : AppCompatActivity() {
                         startActivity(Intent(this,UploadThumbnail::class.java))
                         true
                     }
-                    R.id.people -> {
-                        getUsers(eventId)
+                    R.id.users -> {
+                        getAllUsersWithPermissions(eventId)
+                        true
+                    }
+                    R.id.usersForApprove -> {
+                        getUsersForApprove(eventId)
                         true
                     }
                     R.id.request -> {
@@ -123,13 +131,13 @@ class DetailsActivity : AppCompatActivity() {
             }
             popupMenu.show()
         }
-
-
     }
 
-    private fun creator(eventId: String?): Boolean {
-    //napisi fun za creator
+    private fun returnStart(eventId: String?, imageUrisString: List<Uri>) {
+        rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
+        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
     }
+
 
     private fun makeRequest(eventId: String?) {
             val token= AuthToken.get(this@DetailsActivity)
@@ -140,6 +148,9 @@ class DetailsActivity : AppCompatActivity() {
                         var userId=response.body()?.id
                         accessWithIds(userId,eventId!!)
                         d("response-send","user- $userId, event- $eventId")
+                    }
+                    else{
+                        Toast.makeText(this@DetailsActivity, "${response.errorBody()}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -171,53 +182,60 @@ class DetailsActivity : AppCompatActivity() {
             })
         }
 
-
-
-
-    private fun getUsers(eventId: String?) {
+    private fun getAllUsersWithPermissions(eventId: String?) {
+        val token=AuthToken.get(this)
         val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
-        api.getListAllUsersForAccessInEvent(eventId!!)
+        api.getListAllUsersWithPermissions("Bearer $token",eventId!!)
+            .enqueue(object : Callback<List<ResponseUsersWithPermissions>>{
+                override fun onResponse(
+                    call: Call<List<ResponseUsersWithPermissions>>,
+                    response: Response<List<ResponseUsersWithPermissions>>
+                ) {
+                    d("response-users","${response.body()}")
+                    val apiData = response.body()
+                    if (apiData != null) {
+                        rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
+                        rc_view.adapter = UWPAdapter(this@DetailsActivity, apiData as MutableList<ResponseUsersWithPermissions>,eventId)
+                        //UWP -Users with permissions
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<List<ResponseUsersWithPermissions>>,
+                    t: Throwable
+                ) {
+                    d("failure","${t.message}")
+                }
+            })
+    }
+
+
+    private fun getUsersForApprove(eventId: String?) {
+        val token=AuthToken.get(this)
+        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+        api.getListAllUsersForAccessInEvent("Bearer $token",eventId!!)
             .enqueue(object : Callback<List<ResponseListAll>>{
+                @SuppressLint("ResourceType")
                 override fun onResponse(
                     call: Call<List<ResponseListAll>>,
                     response: Response<List<ResponseListAll>>
                 ) {
-                    val res=response.body()
+
                     d("response-users","${response.body()}")
-                    openDialog(res)
+                    val apiData = response.body()
+                    if (apiData != null) {
+                        rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
+                        rc_view.adapter = ApproveAdapter(this@DetailsActivity, apiData as MutableList<ResponseListAll>,eventId)
+                    }
+
                 }
 
                 override fun onFailure(call: Call<List<ResponseListAll>>, t: Throwable) {
-                    d("failure","")
+                    d("failure","${t.message}")
                 }
             })
 
     }
-
-    private fun openDialog(res: List<ResponseListAll>?) {
-        val personNames = res?.map { "${it.firstName} ${it.lastName}" }?.toTypedArray()
-
-        val builder = AlertDialog.Builder(this@DetailsActivity)
-//        builder.setTitle("Dialog Title")
-//        builder.setMessage("Dialog message goes here.")
-        if (res==null){
-            builder.setTitle("Sorry, there is none waiting to be approved in this event yet!")
-        }
-        builder.setItems(personNames) { _, position ->
-            // Handle selection of a person
-            val selectedPerson = res?.get(position)
-            // Do something with the selected person, such as displaying their details
-        }
-        builder.setPositiveButton("OK") { dialog, which ->
-            // do something when OK button is clicked
-        }
-//        builder.setNegativeButton("Cancel") { dialog, which ->
-//            // do something when Cancel button is clicked
-//        }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
 
     private fun addToFav(){
     val sharedPreferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
