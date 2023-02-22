@@ -44,6 +44,14 @@ interface APIv3 {
     ):Call<ResponseReject>
 
 
+    @DELETE("private/event/user/remove-user-from-event")
+    fun removeUserFromEvent(
+        @Header("Authorization") token: String?,
+        @Query("eventId") eventId: String,
+        @Query("userId") userId: String
+    ):Call<ResponseRemoveUser>
+
+
 //    @POST("")
 //    fun setUserCollaborationInEvent(
 //        //body

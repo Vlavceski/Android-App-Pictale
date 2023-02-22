@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="1in"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/white"
     app:cardPreventCornerOverlap="true"
@@ -12,20 +12,16 @@
 
     <RelativeLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="2in"
+        android:layout_width="wrap_content"
+        android:layout_height="1in"
         android:id="@+id/click_image_grid"
-        android:background="#03A9F4"
+        android:background="#000000"
         >
         <ImageView
             android:id="@+id/image_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:padding="5dp"
+            android:layout_margin="1dp"
             />
 
 

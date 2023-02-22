@@ -58,6 +58,9 @@ class ApproveAdapter(val context: Context,
             // do something when OK button is clicked
             rejectUser(userId)
         }
+        builder.setNegativeButton("Cancel") { dialog, which ->
+
+        }
         val dialog = builder.create()
         dialog.show()
 

@@ -6,4 +6,16 @@
     <string name="logout">Logout</string>
     <string name="menu_icon_description">Menu</string>
     <string name="default_notification_channel_id">Hello</string>
+    <string name="msg_token_fmt" />
+    <string name="default_message">Error</string>
+    <string name="user_join_message">Welcome</string>
+    <string name="title_activity_image">ImageActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

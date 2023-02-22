@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_details.*
@@ -55,7 +56,7 @@ class DetailsActivity : AppCompatActivity() {
         val eventId = intent.getStringExtra("eventId")
         val imageUrisString = intent.getSerializableExtra("imageUrisString") as List<Uri>
 
-        rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
+        rc_view.layoutManager = GridLayoutManager(this@DetailsActivity,2)
         rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
 
         add_file.setOnClickListener {

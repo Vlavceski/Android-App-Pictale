@@ -4,137 +4,135 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
-import android.widget.RemoteViews
+import android.util.Log.d
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.ktx.remoteMessage
 import pictale.mk.HomeActivity
 import pictale.mk.R
+
 
 //const val  channelId="NotificationChannel"
 //const val  channelName="NameChannel"
 
-class FirebaseMService :FirebaseMessagingService(){
+
+class FirebaseMService : FirebaseMessagingService() {
+
     override fun onNewToken(token: String) {
-        // Handle token refresh
         Log.d("TAG", "Refreshed token: $token")
     }
 
-    companion object {
-        private const val TAG = "MyFirebaseMessagingService"
-    }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // Handle new message
-        val message = remoteMessage.data["message"]
-        val intent = Intent(this, HomeActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            putExtra("message", message)
+        Log.d(TAG, "From: ${remoteMessage.from}")
+
+        if (remoteMessage.data.isNotEmpty()) {
+            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+
+            when(remoteMessage.data["type"]) {
+                "userRequestAccess" -> handleUserJoin(remoteMessage)
+                else -> handleUnknownMessage(remoteMessage)
+            }
         }
-        startActivity(intent)
+
+        // Check if message contains a notification payload.
+        if (remoteMessage.notification != null) {
+            Log.d(TAG, "Message Notification Body: ${remoteMessage.notification!!.body}")
+
+            // Handle notification payload
+            handleNotificationPayload(remoteMessage.notification!!)
+        }
     }
-//    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-//        super.onMessageReceived(remoteMessage)
-//
-//        // handle the received message
-//        val notificationTitle = remoteMessage.notification?.title
-//        val notificationBody = remoteMessage.notification?.body
-//        // extract other data from the message
-//
-//        // show the notification to the user
-//        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        val channelId = getString(R.string.default_notification_channel_id)
-//        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-//            .setSmallIcon(R.drawable.logo_no_background)
-//            .setContentTitle(notificationTitle)
-//            .setContentText(notificationBody)
-//            .setAutoCancel(true)
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//        // customize the notification further if needed
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            // create the default notification channel for API 26+
-//            val channel = NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_HIGH)
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//
-//        val notificationId = 1 // unique ID for each notification
-//        notificationManager.notify(notificationId, notificationBuilder.build())
-//    }
 
+    private fun handleUnknownMessage(remoteMessage: RemoteMessage) {
 
+            Log.w(TAG, "Received an unknown message: ${remoteMessage.data}")
 
-//    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-//        // ...
-//
-//        // TODO(developer): Handle FCM messages here.
-//        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-//        Log.d("TAG", "From: ${remoteMessage.from}")
-//
-//        // Check if message contains a data payload.
-//        if (remoteMessage.data.isNotEmpty()) {
-//            Log.d("TAG", "Message data payload: ${remoteMessage.data}")
-//
-//            if (/* Check if data needs to be processed by long running job */ true) {
-//                // For long-running tasks (10 seconds or more) use WorkManager.
-//                scheduleJob()
-//            } else {
-//                // Handle message within 10 seconds
-//                handleNow()
-//            }
-//        }
-//
-//        // Check if message contains a notification payload.
-//        remoteMessage.notification?.let {
-//            Log.d(TAG, "Message Notification Body: ${it.body}")
-//        }
-//
-//        // Also if you intend on generating your own notifications as a result of a received FCM
-//        // message, here is where that should be initiated. See sendNotification method below.
-//    }
+            val message = getString(R.string.default_message)
 
+            sendNotification(message)
+        
 
+    }
 
+    private fun sendNotification(message: String) {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-//    override fun onMessageReceived(message: RemoteMessage) {
-//        if (message.getNotification()!=null) {
-//            genNotification(message.notification!!.title!!,message.notification!!.body!!)
-//        }
-//    }
-//    @SuppressLint("UnspecifiedImmutableFlag")
-//    fun genNotification(title:String, message: String){
-//        val intent= Intent(this,HomeActivity::class.java)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//
-//        val pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT)
-//
-//        var builder:NotificationCompat.Builder=NotificationCompat.Builder(applicationContext, channelId)
-//            .setSmallIcon(R.drawable.logo_no_background)
-//            .setAutoCancel(true)
-//            .setVibrate(longArrayOf(1000,1000,1000,1000))
-//            .setContentIntent(pendingIntent)
-//
-//        builder=builder.setContent(getRemoteView(title,message))
-//
-//        val notificationManager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-//            val notificationChannel=NotificationChannel(channelId, channelName,NotificationManager.IMPORTANCE_HIGH)
-//            notificationManager.createNotificationChannel(notificationChannel)
-//        }
-//        notificationManager.notify(0,builder.build())
-//    }
-//
-//    private fun getRemoteView(title: String, message: String): RemoteViews {
-//        val remoteViews= RemoteViews("pictale.mk",R.layout.notification)
-//        remoteViews.setTextViewText(R.id.titleMsg,title)
-//        remoteViews.setTextViewText(R.id.descriptionMsg,message)
-//        remoteViews.setImageViewResource(R.id.imageMsg,R.drawable.logo_no_background)
-//        return remoteViews
-//    }
+        val channelId = getString(R.string.default_notification_channel_id)
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_account)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(message)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Since Android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        notificationManager.notify(0, notificationBuilder.build())
+    }
+
+    @SuppressLint("StringFormatInvalid")
+    private fun handleUserJoin(remoteMessage: RemoteMessage) {
+        val data = remoteMessage.data
+
+        val username = data["username"]
+
+        val message = getString(R.string.user_join_message, username)
+
+        sendNotification(message)
+    }
+
+    private fun handleNotificationPayload(notification: RemoteMessage.Notification) {
+        val title = notification.title
+        val message = notification.body
+        val imageUrl = notification.imageUrl
+
+        if (imageUrl != null) {
+
+        }
+
+        // If your app needs to generate a notification based on the notification payload,
+        // call the sendNotification function with appropriate parameters
+        sendNotification(title, message)
+    }
+
+    private fun sendNotification(title: String?, message: String?) {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val CHANNEL_ID ="Notification"
+        // Create a notification builder with the required fields
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_account)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        // Show the notification
+        val notificationId = System.currentTimeMillis().toInt()
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(notificationId, builder.build())
+        }
+    }
 }
