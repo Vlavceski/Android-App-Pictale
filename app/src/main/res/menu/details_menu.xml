@@ -17,9 +17,6 @@
         android:id="@+id/usersForApprove"
         android:title="Users for approve"/>
     <item
-        android:id="@+id/request"
-        android:title="Request"/>
-    <item
         android:id="@+id/delete_event"
         android:title="Delete event"/>
 </menu>

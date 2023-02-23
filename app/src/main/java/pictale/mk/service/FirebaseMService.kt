@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import pictale.mk.DetailsActivity
 import pictale.mk.HomeActivity
 import pictale.mk.R
 
@@ -27,7 +28,10 @@ class FirebaseMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
+//        sendRegistrationToServer(token)
     }
+
+
 
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -36,8 +40,11 @@ class FirebaseMService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
 
+            d("data--","${remoteMessage.data["type"]}")
             when(remoteMessage.data["type"]) {
                 "userRequestAccess" -> handleUserJoin(remoteMessage)
+//                "uploadFile" -> handleNewPhoto(remoteMessage)
+//                "newUser" -> handleNewUser(remoteMessage)
                 else -> handleUnknownMessage(remoteMessage)
             }
         }
@@ -52,23 +59,21 @@ class FirebaseMService : FirebaseMessagingService() {
     }
 
     private fun handleUnknownMessage(remoteMessage: RemoteMessage) {
-
             Log.w(TAG, "Received an unknown message: ${remoteMessage.data}")
-
             val message = getString(R.string.default_message)
-
             sendNotification(message)
-        
-
     }
 
     private fun sendNotification(message: String) {
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, DetailsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        d("channelId","$channelId")
+        d("defaultSoundUri","$defaultSoundUri")
+        d("pendingIntent","$pendingIntent")
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_account)
@@ -78,7 +83,12 @@ class FirebaseMService : FirebaseMessagingService() {
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
+        d("notificationBuilder","$notificationBuilder")
+
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        d("notificationManager","$notificationManager")
 
         // Since Android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -109,15 +119,13 @@ class FirebaseMService : FirebaseMessagingService() {
 
         }
 
-        // If your app needs to generate a notification based on the notification payload,
-        // call the sendNotification function with appropriate parameters
         sendNotification(title, message)
     }
 
     private fun sendNotification(title: String?, message: String?) {
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
         val CHANNEL_ID ="Notification"
         // Create a notification builder with the required fields
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)

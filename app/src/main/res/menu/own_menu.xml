@@ -4,18 +4,6 @@
         android:id="@+id/add_fav"
         android:title="Add to favourite"/>
     <item
-        android:id="@+id/update_thumbnail"
-        android:title="Update Thumbnail"/>
-    <item
-        android:id="@+id/users"
-        android:title="Users"/>
-    <item
-        android:id="@+id/add_users"
-        android:title="Add users"/>
-    <item
-        android:id="@+id/delete_users"
-        android:title="Delete users"/>
-    <item
-        android:id="@+id/delete_event"
-        android:title="Delete event"/>
+        android:id="@+id/request"
+        android:title="Request"/>
 </menu>

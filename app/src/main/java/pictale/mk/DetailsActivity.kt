@@ -3,6 +3,7 @@ package pictale.mk
 import android.*
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,6 +22,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.back_page_click
@@ -59,13 +62,128 @@ class DetailsActivity : AppCompatActivity() {
         rc_view.layoutManager = GridLayoutManager(this@DetailsActivity,2)
         rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
 
+        //////////////////////////
+        var userId=""
+        val token= AuthToken.get(this@DetailsActivity)
+        val api= RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        api.getClient("Bearer $token").enqueue(object :Callback<LoggedResponse>{
+            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
+                if (response.code()==200) {
+                    userId= response.body()?.id.toString()
+
+
+                    var responseE:List<ResponseUsersWithPermissions>
+                    val api1=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+                    api1.getListAllUsersWithPermissions("Bearer $token",eventId!!)
+                        .enqueue(object : Callback<List<ResponseUsersWithPermissions>>{
+                            override fun onResponse(
+                                call: Call<List<ResponseUsersWithPermissions>>,
+                                response: Response<List<ResponseUsersWithPermissions>>
+                            ) {
+                                if(response.code()==200) {
+                                    responseE = response.body()!!
+                                    var checkColl=false
+                                    responseE.forEach{
+                                            user->
+
+                                        d("trueeeeeee","$checkColl")
+                                        d("trueeeeeee", user.id)
+                                        d("trueeeeeee", userId)
+                                        if (user.id.toString()==userId.toString()){
+                                            checkColl=true
+                                        }
+                                    }
+
+                                    menu_icon.setOnClickListener {
+                                        d("moze vlez","$checkColl")
+                                        if (checkColl){
+                                            val popupMenu = PopupMenu(this@DetailsActivity, menu_icon)
+                                            popupMenu.inflate(R.menu.details_menu)
+                                            popupMenu.setOnMenuItemClickListener { menuItem ->
+                                                when (menuItem.itemId) {
+                                                    R.id.return_start -> {
+                                                        returnStart(eventId,imageUrisString)
+                                                        true
+                                                    }
+                                                    R.id.add_fav -> {
+                                                        addToFav()
+                                                        true
+                                                    }
+                                                    R.id.update_thumbnail -> {
+                                                        startActivity(Intent(this@DetailsActivity,UploadThumbnail::class.java))
+                                                        true
+                                                    }
+                                                    R.id.users -> {
+                                                        getAllUsersWithPermissions(eventId)
+                                                        true
+                                                    }
+                                                    R.id.usersForApprove -> {
+                                                        getUsersForApprove(eventId)
+                                                        true
+                                                    }
+                                                    R.id.delete_event -> {
+                                                        true
+                                                    }
+                                                    else -> false
+                                                }
+                                            }
+                                            popupMenu.show()
+                                        }
+                                        else{
+                                            val popupMenu = PopupMenu(this@DetailsActivity, menu_icon)
+                                            popupMenu.inflate(R.menu.own_menu)
+                                            popupMenu.setOnMenuItemClickListener { menuItem ->
+                                                when (menuItem.itemId) {
+                                                    R.id.add_fav -> {
+                                                        addToFav()
+                                                        true
+                                                    }
+                                                    R.id.request -> {
+                                                        makeRequest(eventId)
+                                                        true
+                                                    }
+                                                    else -> false
+                                                }
+                                            }
+                                            popupMenu.show()
+                                        }
+                                    }
+
+
+                                }
+                                else{
+                                    d("response-error", "${response.errorBody()}")
+                                }
+                            }
+
+                            override fun onFailure(
+                                call: Call<List<ResponseUsersWithPermissions>>,
+                                t: Throwable
+                            ) {
+                                d("failure","${t.message}")
+                            }
+                        })
+
+                }
+                else{
+                    Toast.makeText(this@DetailsActivity, "${response.errorBody()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
+                t.message?.let { Log.d("Login_failure-->", it) }
+            }
+        })
+
+        ///////////////////////////////////////////////////////////////
+
+
         add_file.setOnClickListener {
             pickedPhoto(it)
         }
         eventClicker.setOnClickListener {
             startActivity(Intent(this@DetailsActivity,DetailsActivity::class.java))
         }
-
+        val checkColl=checkCollaboratio(eventId,userId)
 
         name_of_event.text = eventName
         location_of_event.text = eventLocation
@@ -94,44 +212,41 @@ class DetailsActivity : AppCompatActivity() {
 
         }
 
-        menu_icon.setOnClickListener {
-           val popupMenu = PopupMenu(this, menu_icon)
-            popupMenu.inflate(R.menu.details_menu)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.return_start -> {
-                        returnStart(eventId,imageUrisString)
-                        true
-                    }
-                    R.id.add_fav -> {
-                        addToFav()
-                        true
-                    }
-                    R.id.update_thumbnail -> {
-                        startActivity(Intent(this,UploadThumbnail::class.java))
-                        true
-                    }
-                    R.id.users -> {
-                        getAllUsersWithPermissions(eventId)
-                        true
-                    }
-                    R.id.usersForApprove -> {
-                        getUsersForApprove(eventId)
-                        true
-                    }
-                    R.id.request -> {
-                        makeRequest(eventId)
-                        true
-                    }
+    }
 
-                    R.id.delete_event -> {
-                        true
+    private fun checkCollaboratio(eventId: String?, userId: String): Boolean {
+        val token=AuthToken.get(this)
+        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
+        var checkColl=false
+        api.getListAllUsersWithPermissions("Bearer $token",eventId!!)
+            .enqueue(object : Callback<List<ResponseUsersWithPermissions>>{
+                override fun onResponse(
+                    call: Call<List<ResponseUsersWithPermissions>>,
+                    response: Response<List<ResponseUsersWithPermissions>>
+                ) {
+                    if(response.code()==200) {
+                        val response = response.body()
+                        response?.forEach { user ->
+                            if(user.id==userId){
+                                checkColl=true
+                            }
+                        }
                     }
-                    else -> false
+                    else{
+                        d("response-error", "${response.errorBody()}")
+
+                    }
                 }
-            }
-            popupMenu.show()
-        }
+
+                override fun onFailure(
+                    call: Call<List<ResponseUsersWithPermissions>>,
+                    t: Throwable
+                ) {
+                    d("failure","${t.message}")
+                }
+            })
+
+        return checkColl
     }
 
     private fun returnStart(eventId: String?, imageUrisString: List<Uri>) {
@@ -170,6 +285,15 @@ class DetailsActivity : AppCompatActivity() {
                     response: Response<ResponseAccessInEvent>
                 ) {
                     if (response.isSuccessful) {
+                        Firebase.messaging.subscribeToTopic("userRequestAccess")
+                            .addOnCompleteListener { task ->
+                                var msg = "Subscribed"
+                                if (!task.isSuccessful) {
+                                    msg = "Subscribe failed"
+                                }
+                                Log.d(ContentValues.TAG, msg)
+                                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                            }
                         Toast.makeText(this@DetailsActivity, "${response.body()}", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@DetailsActivity, "${response.errorBody()}", Toast.LENGTH_SHORT).show()

@@ -58,7 +58,7 @@ class ApproveAdapter(val context: Context,
             // do something when OK button is clicked
             rejectUser(userId)
         }
-        builder.setNegativeButton("Cancel") { dialog, which ->
+        builder.setNeutralButton("Cancel") { dialog, which ->
 
         }
         val dialog = builder.create()
@@ -74,11 +74,22 @@ class ApproveAdapter(val context: Context,
                     call: Call<ResponseReject>,
                     response: Response<ResponseReject>
                 ) {
-                    TODO("Not yet implemented")
+                    if (response.code()==200){
+                        d("Success","Deleted!!")
+                        //treba da se povika povtorno za sliki
+                        val intent = Intent(context, DetailsActivity::class.java)
+                        context.startActivity(intent)
+
+                    }
+                    else{
+                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_LONG).show()
+                        val intent = Intent(context, DetailsActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseReject>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    d("Failure","${t.message}")
                 }
 
 
@@ -97,7 +108,8 @@ class ApproveAdapter(val context: Context,
                 if (response.code()==200){
                     d("Success","Approved!!")
                     //treba da se povika povtorno za sliki
-
+                    val intent = Intent(context, DetailsActivity::class.java)
+                    context.startActivity(intent)
                 }
                 else{
                     Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_LONG).show()
