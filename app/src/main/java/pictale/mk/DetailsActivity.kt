@@ -58,9 +58,10 @@ class DetailsActivity : AppCompatActivity() {
         val eventLocation = intent.getStringExtra("location")
         val eventId = intent.getStringExtra("eventId")
         val imageUrisString = intent.getSerializableExtra("imageUrisString") as List<Uri>
+        d("ovde","$imageUrisString")
 
         rc_view.layoutManager = GridLayoutManager(this@DetailsActivity,2)
-        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
+        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId,eventName,eventLocation)
 
         //////////////////////////
         var userId=""
@@ -102,7 +103,7 @@ class DetailsActivity : AppCompatActivity() {
                                             popupMenu.setOnMenuItemClickListener { menuItem ->
                                                 when (menuItem.itemId) {
                                                     R.id.return_start -> {
-                                                        returnStart(eventId,imageUrisString)
+                                                        returnStart(imageUrisString,eventId,eventName,eventLocation)
                                                         true
                                                     }
                                                     R.id.add_fav -> {
@@ -118,7 +119,7 @@ class DetailsActivity : AppCompatActivity() {
                                                         true
                                                     }
                                                     R.id.usersForApprove -> {
-                                                        getUsersForApprove(eventId)
+                                                        getUsersForApprove(eventId,eventName,eventLocation,imageUrisString)
                                                         true
                                                     }
                                                     R.id.delete_event -> {
@@ -183,7 +184,7 @@ class DetailsActivity : AppCompatActivity() {
         eventClicker.setOnClickListener {
             startActivity(Intent(this@DetailsActivity,DetailsActivity::class.java))
         }
-        val checkColl=checkCollaboratio(eventId,userId)
+
 
         name_of_event.text = eventName
         location_of_event.text = eventLocation
@@ -214,44 +215,15 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
-    private fun checkCollaboratio(eventId: String?, userId: String): Boolean {
-        val token=AuthToken.get(this)
-        val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
-        var checkColl=false
-        api.getListAllUsersWithPermissions("Bearer $token",eventId!!)
-            .enqueue(object : Callback<List<ResponseUsersWithPermissions>>{
-                override fun onResponse(
-                    call: Call<List<ResponseUsersWithPermissions>>,
-                    response: Response<List<ResponseUsersWithPermissions>>
-                ) {
-                    if(response.code()==200) {
-                        val response = response.body()
-                        response?.forEach { user ->
-                            if(user.id==userId){
-                                checkColl=true
-                            }
-                        }
-                    }
-                    else{
-                        d("response-error", "${response.errorBody()}")
 
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<List<ResponseUsersWithPermissions>>,
-                    t: Throwable
-                ) {
-                    d("failure","${t.message}")
-                }
-            })
-
-        return checkColl
-    }
-
-    private fun returnStart(eventId: String?, imageUrisString: List<Uri>) {
-        rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
-        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId)
+    private fun returnStart(
+        imageUrisString: List<Uri>,
+        eventId: String,
+        eventName: String?,
+        eventLocation: String?
+    ) {
+        rc_view.layoutManager = GridLayoutManager(this@DetailsActivity,2)
+        rc_view.adapter = ImageAdapter(this@DetailsActivity, imageUrisString,eventId,eventName,eventLocation)
     }
 
 
@@ -335,7 +307,12 @@ class DetailsActivity : AppCompatActivity() {
     }
 
 
-    private fun getUsersForApprove(eventId: String?) {
+    private fun getUsersForApprove(
+        eventId: String,
+        eventName: String?,
+        eventLocation: String?,
+        imageUrisString: List<Uri>
+    ) {
         val token=AuthToken.get(this)
         val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
         api.getListAllUsersForAccessInEvent("Bearer $token",eventId!!)
@@ -350,7 +327,8 @@ class DetailsActivity : AppCompatActivity() {
                     val apiData = response.body()
                     if (apiData != null) {
                         rc_view.layoutManager = LinearLayoutManager(this@DetailsActivity)
-                        rc_view.adapter = ApproveAdapter(this@DetailsActivity, apiData as MutableList<ResponseListAll>,eventId)
+                        rc_view.adapter = ApproveAdapter(this@DetailsActivity,
+                            apiData as MutableList<ResponseListAll>,eventId,eventName,eventLocation,imageUrisString)
                     }
 
                 }

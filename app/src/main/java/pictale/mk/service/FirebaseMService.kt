@@ -7,12 +7,15 @@ import android.app.PendingIntent
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import android.util.Log.d
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pictale.mk.DetailsActivity
@@ -61,53 +64,114 @@ class FirebaseMService : FirebaseMessagingService() {
     private fun handleUnknownMessage(remoteMessage: RemoteMessage) {
             Log.w(TAG, "Received an unknown message: ${remoteMessage.data}")
             val message = getString(R.string.default_message)
-            sendNotification(message)
+//            sendNotification(message)
+        if (remoteMessage.notification != null) {
+            showNotification(remoteMessage.notification?.title, remoteMessage.notification?.body)
+        } else {
+            showNotification(remoteMessage.data["title"], remoteMessage.data["message"])
+        }
     }
 
-    private fun sendNotification(message: String) {
-        val intent = Intent(this, DetailsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-        val channelId = getString(R.string.default_notification_channel_id)
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        d("channelId","$channelId")
-        d("defaultSoundUri","$defaultSoundUri")
-        d("pendingIntent","$pendingIntent")
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun showNotification(
+        title: String?,
+        body: String?
+    ) {
+        val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+
+        val channelId = getString(R.string.channel_id)
+        val channelName = getString(R.string.channel_name)
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setupNotificationChannels(channelId, channelName, notificationManager)
+        }
+
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_account)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(message)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title)
+            .setContentText(body)
             .setAutoCancel(true)
-            .setSound(defaultSoundUri)
+            .setSound(soundUri)
             .setContentIntent(pendingIntent)
-
-        d("notificationBuilder","$notificationBuilder")
-
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        d("notificationManager","$notificationManager")
-
-        // Since Android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
 
         notificationManager.notify(0, notificationBuilder.build())
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private fun setupNotificationChannels(
+        channelId: String,
+        channelName: String,
+        notificationManager: NotificationManager
+    ) {
+
+        val channel =
+            NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
+        channel.enableLights(true)
+        channel.lightColor = Color.GREEN
+        channel.enableVibration(true)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+
+//    private fun sendNotification(message: String) {
+//        val intent = Intent(this, DetailsActivity::class.java)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+//
+//        val channelId = getString(R.string.default_notification_channel_id)
+//        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+//        d("channelId","$channelId")
+//        d("defaultSoundUri","$defaultSoundUri")
+//        d("pendingIntent","$pendingIntent")
+//
+//        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+//            .setSmallIcon(R.drawable.ic_account)
+//            .setContentTitle(getString(R.string.app_name))
+//            .setContentText(message)
+//            .setAutoCancel(true)
+//            .setSound(defaultSoundUri)
+//            .setContentIntent(pendingIntent)
+//
+//        d("notificationBuilder","$notificationBuilder")
+//
+//
+//        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//
+//        d("notificationManager","$notificationManager")
+//
+//        // Since Android Oreo notification channel is needed.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
+//            notificationManager.createNotificationChannel(channel)
+//        }
+//
+//        notificationManager.notify(0, notificationBuilder.build())
+//    }
+
     @SuppressLint("StringFormatInvalid")
     private fun handleUserJoin(remoteMessage: RemoteMessage) {
-        val data = remoteMessage.data
+//        val data = remoteMessage.data
+//        val username = data["username"]
+//        val message = getString(R.string.user_join_message, username)
+//        sendNotification(message)
+        if (remoteMessage.notification != null) {
+            showNotification(remoteMessage.notification?.title, remoteMessage.notification?.body)
+        } else {
+            showNotification(remoteMessage.data["title"], remoteMessage.data["message"])
+        }
 
-        val username = data["username"]
 
-        val message = getString(R.string.user_join_message, username)
-
-        sendNotification(message)
     }
 
     private fun handleNotificationPayload(notification: RemoteMessage.Notification) {

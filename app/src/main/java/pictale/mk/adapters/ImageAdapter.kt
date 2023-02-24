@@ -16,7 +16,11 @@ import pictale.mk.ImageActivity
 import pictale.mk.R
 
 
-class ImageAdapter(val context: Context, private val items: List<Uri>, eventId: String?) :
+class ImageAdapter(val context: Context,
+                   private val items: List<Uri>,
+                   val eventId: String?,
+                   val name: String?,
+                   val location: String?) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
     val data=items
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,6 +41,11 @@ class ImageAdapter(val context: Context, private val items: List<Uri>, eventId: 
             val intent = Intent(context, ImageActivity::class.java)
             val uri: Uri = id
             intent.putExtra("imageUri", uri.toString())
+            intent.putExtra("name", name)
+            intent.putExtra("eventId", eventId)
+            intent.putExtra("imageUrisString", data as java.io.Serializable)
+            intent.putExtra("location", location)
+
             context.startActivity(intent)
 
 

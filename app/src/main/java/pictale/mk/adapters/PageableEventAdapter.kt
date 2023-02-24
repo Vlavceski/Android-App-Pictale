@@ -85,7 +85,7 @@ class PageableEventAdapter(private val context: Context, var data: MutableList<E
                 val name=response.body()?.name.toString()
                 val location=response.body()?.location.toString()
                 val eventId=response.body()?.eventId.toString()
-                val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
+//                val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
 
 
                 val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }

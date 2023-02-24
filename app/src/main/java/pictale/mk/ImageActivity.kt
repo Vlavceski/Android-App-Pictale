@@ -27,6 +27,11 @@ class ImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_image)
 //        val image = intent.getSerializableExtra("imageUrisString") as Uri
 //        d("image--","$image")
+        val eventName = intent.getStringExtra("name")
+        val eventLocation = intent.getStringExtra("location")
+        val eventId = intent.getStringExtra("eventId")
+        val imageUrisString = intent.getSerializableExtra("imageUrisString") as List<Uri>
+
 
         val extras = intent.extras
         val myUri = Uri.parse(extras!!.getString("imageUri"))
@@ -50,7 +55,12 @@ class ImageActivity : AppCompatActivity() {
             }
         }
         back_page_click.setOnClickListener {
-            startActivity(Intent(this,DetailsActivity::class.java))
+            val intent = Intent(this@ImageActivity, DetailsActivity::class.java)
+            intent.putExtra("name", eventName)
+            intent.putExtra("eventId", eventId)
+            intent.putExtra("imageUrisString", imageUrisString as java.io.Serializable)
+            intent.putExtra("location", eventLocation)
+            startActivity(intent)
         }
     }
 

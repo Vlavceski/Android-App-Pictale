@@ -2,7 +2,7 @@ package pictale.mk.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.text.AutoText
+import android.net.Uri
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +20,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ApproveAdapter(val context: Context,
-                     var data: MutableList<ResponseListAll>,
-                     val eventId: String):
+class ApproveAdapter(
+    val context: Context,
+    var data: MutableList<ResponseListAll>,
+    val eventId: String,
+    val name: String?,
+    val location: String?,
+    val images: List<Uri>,
+
+    ):
     RecyclerView.Adapter<ApproveAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -66,7 +72,7 @@ class ApproveAdapter(val context: Context,
 
     }
     private fun rejectUser(userId: String) {
-        var token= AuthToken.get(context)
+        val token= AuthToken.get(context)
         val api=RetrofitInstanceV3.getRetrofitInstance().create(APIv3::class.java)
         api.rejectAccessInEvent("Bearer $token",eventId,userId)
             .enqueue(object :Callback<ResponseReject>{
@@ -76,15 +82,17 @@ class ApproveAdapter(val context: Context,
                 ) {
                     if (response.code()==200){
                         d("Success","Deleted!!")
-                        //treba da se povika povtorno za sliki
-                        val intent = Intent(context, DetailsActivity::class.java)
-                        context.startActivity(intent)
 
+                        val intent = Intent(context, DetailsActivity::class.java)
+                        intent.putExtra("name", name)
+                        intent.putExtra("eventId", eventId)
+                        intent.putExtra("imageUrisString", images as java.io.Serializable)
+                        intent.putExtra("location", location)
+                        context.startActivity(intent)
                     }
                     else{
                         Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_LONG).show()
-                        val intent = Intent(context, DetailsActivity::class.java)
-                        context.startActivity(intent)
+
                     }
                 }
 
@@ -108,7 +116,12 @@ class ApproveAdapter(val context: Context,
                 if (response.code()==200){
                     d("Success","Approved!!")
                     //treba da se povika povtorno za sliki
+                    d("images","$images")
                     val intent = Intent(context, DetailsActivity::class.java)
+                    intent.putExtra("name", name)
+                    intent.putExtra("eventId", eventId)
+                    intent.putExtra("imageUrisString", images as java.io.Serializable)
+                    intent.putExtra("location", location)
                     context.startActivity(intent)
                 }
                 else{

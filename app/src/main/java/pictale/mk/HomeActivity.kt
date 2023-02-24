@@ -64,7 +64,7 @@ class HomeActivity : AppCompatActivity() {
 //            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
 //        })
 
-        Firebase.messaging.isAutoInitEnabled = true
+//        Firebase.messaging.isAutoInitEnabled = true
 /////////////////////
 
         add_event.setOnClickListener {
