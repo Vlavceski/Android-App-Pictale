@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="60dp"
-        android:text="Change Info"
+        android:text="@string/change_info"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.449"
@@ -30,7 +30,7 @@
         android:layout_gravity="center"
         android:layout_marginStart="12dp"
         android:layout_marginTop="32dp"
-        android:text="Change First Name"
+        android:text="@string/change_first_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -42,7 +42,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:inputType="text"
-        android:hint="Name"
+        android:hint="@string/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView3"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:text="Change Last Name"
+        android:text="@string/change_last_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.047"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:inputType="text"
-        android:hint="Surname"
+        android:hint="@string/surname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.619"
         app:layout_constraintStart_toEndOf="@+id/textView9"
@@ -89,14 +89,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="Change" />
+            android:text="@string/change" />
 
         <Button
 
             android:id="@+id/close_popup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Close" />
+            android:text="@string/close" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

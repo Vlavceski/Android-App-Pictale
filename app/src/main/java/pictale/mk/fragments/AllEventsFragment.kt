@@ -1,5 +1,6 @@
 package pictale.mk.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlinx.android.synthetic.main.item_event_layout.*
+import pictale.mk.AddEventActivity
 import pictale.mk.R
 import pictale.mk.adapters.EventAdapter
 import pictale.mk.adapters.PageableEventAdapter
@@ -63,6 +65,10 @@ class AllEventsFragment : Fragment() {
     override fun  onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        add_event.setOnClickListener {
+            startActivity(Intent(context, AddEventActivity::class.java))
+        }
 
         tvSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {

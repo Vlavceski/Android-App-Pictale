@@ -67,9 +67,7 @@ class HomeActivity : AppCompatActivity() {
 //        Firebase.messaging.isAutoInitEnabled = true
 /////////////////////
 
-        add_event.setOnClickListener {
-            startActivity(Intent(this,AddEventActivity::class.java))
-        }
+
 
         imageView5.setOnClickListener {
             sendMessage()
