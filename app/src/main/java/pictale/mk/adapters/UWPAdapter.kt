@@ -1,6 +1,7 @@
 package pictale.mk.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_approve_users.view.*
+import pictale.mk.DetailsFavActivity
 import pictale.mk.R
 import pictale.mk.access.*
 import pictale.mk.auth.AuthToken

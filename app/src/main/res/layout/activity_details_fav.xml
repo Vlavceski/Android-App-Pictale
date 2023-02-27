@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailsActivity"
-    android:background="#CDDC39">
+    android:background="#FFFFFF">
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -36,50 +36,56 @@
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/eventClicker_"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event"
+        android:text="Fav Event"
         android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_click" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.004" />
 
     <TextView
         android:id="@+id/name_of_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.018" />
 
     <TextView
         android:id="@+id/location_of_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="Location"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_of_event" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.047" />
 
-    <GridView
-        android:id="@+id/grid_view"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_view_fav"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnWidth="100dp"
-        android:gravity="center"
-        android:minHeight="90dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="1dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_of_event" />
+        app:layout_constraintTop_toBottomOf="@+id/eventClicker_"
+        app:layout_constraintVertical_bias="0.023"
+        />
+
 
     <Button
         android:id="@+id/add_file"
@@ -88,18 +94,37 @@
         android:text="Add File"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grid_view"
-        app:layout_constraintVertical_bias="0.969" />
-
-    <ImageView
-        android:id="@+id/btn_fav_del"
-        android:layout_width="40dp"
-        android:layout_height="45dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView5"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.974" />
+
+    <ImageView
+        android:id="@+id/btn_delete_event"
+        android:layout_width="40dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.878"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.004"
         app:srcCompat="@drawable/ic_baseline_delete_forever_24" />
+
+
+
+    <ImageView
+        android:id="@+id/menu_icon_fav"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:contentDescription="@string/menu_icon_description"
+        android:src="@drawable/ic_more_info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btn_delete_event"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_click"
+        app:layout_constraintVertical_bias="0.004" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

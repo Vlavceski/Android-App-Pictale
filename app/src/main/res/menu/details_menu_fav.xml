@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/return_start"
+        android:title="Return"/>
+    <item
+        android:id="@+id/remove_event"
+        android:title="Remove event"/>
+    <item
+        android:id="@+id/update_thumbnail"
+        android:title="Update Thumbnail"/>
+    <item
+        android:id="@+id/users"
+        android:title="Users"/>
+    <item
+        android:id="@+id/usersForApprove"
+        android:title="Users for approve"/>
+    <item
+        android:id="@+id/delete_event"
+        android:title="Delete event"/>
+</menu>

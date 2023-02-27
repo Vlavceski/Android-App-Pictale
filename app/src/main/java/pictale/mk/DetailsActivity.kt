@@ -257,6 +257,7 @@ class DetailsActivity : AppCompatActivity() {
                     response: Response<ResponseAccessInEvent>
                 ) {
                     if (response.isSuccessful) {
+
                         Firebase.messaging.subscribeToTopic("userRequestAccess")
                             .addOnCompleteListener { task ->
                                 var msg = "Subscribed"

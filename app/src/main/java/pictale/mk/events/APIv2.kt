@@ -50,8 +50,4 @@ interface APIv2 {
         @Query("size") size: Int,
     ): Call<ResponseAllEventsPages>
 
-
-
-
-
 }

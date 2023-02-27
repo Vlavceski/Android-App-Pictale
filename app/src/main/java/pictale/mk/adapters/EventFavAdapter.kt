@@ -2,6 +2,7 @@ package pictale.mk.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import pictale.mk.DetailsFavActivity
 import pictale.mk.R
 import pictale.mk.auth.responses.ResponseFav
 import pictale.mk.events.APIv2
+import pictale.mk.events.EventFile
 import pictale.mk.events.ResponseDetails
 import pictale.mk.events.RetrofitInstanceV2
 import retrofit2.Call
@@ -55,11 +57,17 @@ class EventFavAdapter(val context: Context, var data: MutableList<ResponseFav>):
                 val location=response.body()?.location.toString()
                 val eventId=response.body()?.eventId.toString()
 
-                val intent = Intent(context, DetailsFavActivity::class.java)
-                intent.putExtra("name", name)
-                intent.putExtra("eventId", eventId)
-                intent.putExtra("location", location)
-                context.startActivity(intent)
+                val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
+                if (imageUrisString != null) {
+                    var imageUris: ArrayList<Uri>
+                    imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>
+                    val intent = Intent(context, DetailsFavActivity::class.java)
+                    intent.putExtra("name", name)
+                    intent.putExtra("eventId", eventId)
+                    intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
+                    intent.putExtra("location", location)
+                    context.startActivity(intent)
+                }
             }
 
             override fun onFailure(call: Call<ResponseDetails>, t: Throwable) {
