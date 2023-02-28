@@ -10,6 +10,11 @@ interface APIv2 {
     @GET("event/findEventsByParameter")
     fun getPublicEvents(@Query("value") public: String): Call<List<ResponseAllEvents>>
 
+    @DELETE("event/delete-file-from-event")
+    fun deleteFileFromEvent(@Header("Authorization") token: String?,
+                            @Query("eventFileId") eventFileId: String,
+                            @Query("eventId") eventId: String):Call<ResponseDeleteFile>
+
     @POST("event/createNewEvent")
     fun addEvent(@Header("Authorization") token: String?,@Body addEventBody: AddEventBody):Call<ResponseAddEvent>
 

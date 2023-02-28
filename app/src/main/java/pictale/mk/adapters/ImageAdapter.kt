@@ -49,18 +49,6 @@ class ImageAdapter(val context: Context,
             context.startActivity(intent)
 
 
-            //            val intent = Intent(context, ImageActivity::class.java)
-////            intent.putExtra("data", data as java.io.Serializable)
-//            val imageUri: Uri = id
-////            val intent = Intent(Intent.ACTION_SEND)
-//            intent.type = "image/*"
-//            intent.putExtra(Intent.EXTRA_STREAM, imageUri)
-//            startActivity(Intent.createChooser(intent, "image"), intent)
-//
-//            val uri: Uri = id
-//            val intent = Intent(context, ImageActivity::class.java)
-//            intent.putExtra("imageUri", uri.toString())
-//            startActivity(intent)
         }
     }
 

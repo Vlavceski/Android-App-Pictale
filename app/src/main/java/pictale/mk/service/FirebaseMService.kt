@@ -40,8 +40,8 @@ class FirebaseMService : FirebaseMessagingService() {
             d("received--","{$remoteMessage.notification?.title} --- ${remoteMessage.notification?.body!!}")
             when(remoteMessage.data["type"]) {
                 "userRequestAccess" -> handleUserJoin(remoteMessage.notification?.title,remoteMessage.notification?.body!!)
-//                "uploadFile" -> handleNewPhoto(remoteMessage)
-//                "newUser" -> handleNewUser(remoteMessage)
+                "uploadFile" -> handleNewPhoto(remoteMessage.notification?.title,remoteMessage.notification?.body!!)
+                "newUser" -> handleNewUser(remoteMessage.notification?.title,remoteMessage.notification?.body!!)
                 else -> handleUnknownMessage(remoteMessage)
             }
         }
@@ -51,20 +51,31 @@ class FirebaseMService : FirebaseMessagingService() {
         }
     }
 
+    private fun handleNewUser(title: String?, body: String) {
+
+        showNotifications(title!!,body)
+    }
+
+    private fun handleNewPhoto(title: String?, body: String) {
+        d("Title: ","$title")
+        d("Body: ", body)
+        showNotifications(title!!,body)
+    }
+
     private fun handleUnknownMessage(remoteMessage: RemoteMessage) {
             Log.w(TAG, "Received an unknown message: ${remoteMessage.data}")
             val message = getString(R.string.default_message)
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
+
     private fun showNotifications(title:String, remoteMessage: String?) {
         val intent = Intent(this, HomeActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val contentView = RemoteViews(packageName, R.layout.notification)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = NotificationChannel(title, remoteMessage, NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel = NotificationChannel(title, remoteMessage, NotificationManager.IMPORTANCE_DEFAULT)
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.GREEN
             notificationChannel.enableVibration(false)

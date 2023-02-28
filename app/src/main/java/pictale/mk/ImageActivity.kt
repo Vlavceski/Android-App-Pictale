@@ -7,12 +7,20 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.util.Log.d
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.android.synthetic.main.item_event_layout.view.*
+import pictale.mk.auth.AuthToken
+import pictale.mk.events.APIv2
+import pictale.mk.events.ResponseDeleteFile
+import pictale.mk.events.RetrofitInstanceV2
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -53,6 +61,29 @@ class ImageActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+        btn_delete.setOnClickListener {
+            var token= AuthToken.get(this)
+            var api =RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+            api.deleteFileFromEvent("Bearer $token",myUri.toString(),eventId!!).enqueue(object :Callback<ResponseDeleteFile>{
+                override fun onResponse(
+                    call: Call<ResponseDeleteFile>,
+                    response: Response<ResponseDeleteFile>
+                ) {
+                    d("success","Deleted")
+                    val intent = Intent(this@ImageActivity, DetailsActivity::class.java)
+                    intent.putExtra("name", eventName)
+                    intent.putExtra("eventId", eventId)
+                    intent.putExtra("imageUrisString", imageUrisString as java.io.Serializable)
+                    intent.putExtra("location", eventLocation)
+                    startActivity(intent)
+                }
+
+                override fun onFailure(call: Call<ResponseDeleteFile>, t: Throwable) {
+                    d("Failure","${t.message}")
+                }
+
+            })
         }
         back_page_click.setOnClickListener {
             val intent = Intent(this@ImageActivity, DetailsActivity::class.java)

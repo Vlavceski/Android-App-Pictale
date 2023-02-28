@@ -15,9 +15,9 @@
         android:title="Fav Events"
         android:icon="@drawable/ic_fav_events"
         />
-    <item
-        android:id="@+id/highlights"
-        android:title="Highlights"
-        android:icon="@drawable/ic_highlight"
-        />
+<!--    <item-->
+<!--        android:id="@+id/highlights"-->
+<!--        android:title="Highlights"-->
+<!--        android:icon="@drawable/ic_highlight"-->
+<!--        />-->
 </menu>

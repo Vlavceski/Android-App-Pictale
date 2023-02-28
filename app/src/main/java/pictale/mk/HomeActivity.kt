@@ -2,6 +2,7 @@ package pictale.mk
 
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -16,17 +17,28 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.ktx.messaging
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home.imageView5
+import kotlinx.android.synthetic.main.activity_home.toolbar_click
+import kotlinx.android.synthetic.main.activity_setting.*
+import pictale.mk.auth.API
 import pictale.mk.auth.AuthToken
+import pictale.mk.auth.RetrofitInstance
+import pictale.mk.auth.responses.LoggedResponse
 import pictale.mk.fragments.AllEventsFragment
 import pictale.mk.fragments.FavEventsFragment
 import pictale.mk.fragments.HighlightsFragment
 import pictale.mk.fragments.MyEventsFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class HomeActivity : AppCompatActivity() {
@@ -39,32 +51,36 @@ class HomeActivity : AppCompatActivity() {
 
 
 ///////////////////
-        FirebaseApp.initializeApp(this)
-//        Firebase.messaging.subscribeToTopic("userRequestAccess")
-//            .addOnCompleteListener { task ->
-//                var msg = "Subscribed"
-//                if (!task.isSuccessful) {
-//                    msg = "Subscribe failed"
-//                }
-//                Log.d(TAG, msg)
-//                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-//            }
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
-//                return@OnCompleteListener
-//            }
-//
-//            // Get new FCM registration token
-//            val token = task.result
-//
-//            // Log and toast
-//            val msg = getString(R.string.msg_token_fmt, token)
-//            Log.d("TAG", msg)
-//            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-//        })
 
-//        Firebase.messaging.isAutoInitEnabled = true
+        val token = AuthToken.get(this)
+        val api = RetrofitInstance.getRetrofitInstance().create(API::class.java)
+        api.getClient("Bearer $token").enqueue(object : Callback<LoggedResponse> {
+            override fun onResponse(call: Call<LoggedResponse>, response: Response<LoggedResponse>) {
+                d("Profile_response-->", "${response.body()}")
+                if (response.code()==200) {
+                    val userId=response.body()!!.id
+
+                    Firebase.messaging.subscribeToTopic(userId)
+                        .addOnCompleteListener { task ->
+                            var msg = "Subscribed"
+                            if (!task.isSuccessful) {
+                                msg = "Subscribe failed"
+                            }
+                            Log.d(ContentValues.TAG, msg)
+                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                        }
+
+                }
+            }
+            override fun onFailure(call: Call<LoggedResponse>, t: Throwable) {
+                Toast.makeText(this@HomeActivity, t.message, Toast.LENGTH_SHORT).show()
+                t.message?.let { Log.d("Login_failure-->", it) }
+
+            }
+        })
+
+        FirebaseApp.initializeApp(this)
+
 /////////////////////
 
 
@@ -90,7 +106,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.all_events -> replaceFragment(AllEventsFragment())
                 R.id.my_events -> replaceFragment(MyEventsFragment())
                 R.id.fav_events -> replaceFragment(FavEventsFragment())
-                R.id.highlights -> replaceFragment(HighlightsFragment())
+//                R.id.highlights -> replaceFragment(HighlightsFragment())
                 else -> {true}
             }
             true

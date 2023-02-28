@@ -37,5 +37,7 @@ interface API {
     @POST("auth/googleLogin")
     fun signinWithGoogle(@Body googleSignIn: GoogleSignIn): Call<ResponseGoogleLogin>
 
+    @GET("user/event/list-events-that-user-created")
+    fun getEvents(@Header("Authorization") token: String?): Call<List<ResponseMyEvents>>
 
 }

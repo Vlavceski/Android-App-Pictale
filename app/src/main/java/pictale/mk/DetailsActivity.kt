@@ -257,8 +257,8 @@ class DetailsActivity : AppCompatActivity() {
                     response: Response<ResponseAccessInEvent>
                 ) {
                     if (response.isSuccessful) {
-
-                        Firebase.messaging.subscribeToTopic("userRequestAccess")
+                        //Firebase
+                        Firebase.messaging.subscribeToTopic(eventId)
                             .addOnCompleteListener { task ->
                                 var msg = "Subscribed"
                                 if (!task.isSuccessful) {
@@ -411,7 +411,17 @@ class DetailsActivity : AppCompatActivity() {
                         call: Call<ResponseUploadFile>,
                         response: Response<ResponseUploadFile>
                     ) {
-                        d("-------","Success")
+                        //firebase
+                        Firebase.messaging.subscribeToTopic(eventId!!)
+                            .addOnCompleteListener { task ->
+                                var msg = "Upload picture"
+                                if (!task.isSuccessful) {
+                                    msg = "Upload failed"
+                                }
+                                Log.d(ContentValues.TAG, msg)
+                                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                            }
+
                     }
 
                     override fun onFailure(call: Call<ResponseUploadFile>, t: Throwable) {

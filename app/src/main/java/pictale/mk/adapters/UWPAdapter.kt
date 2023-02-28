@@ -78,6 +78,8 @@ class UWPAdapter(
             ) {
              d("Response","Success-Deleted")
 //                Redirect()
+
+
             }
             override fun onFailure(call: Call<ResponseRemoveUser>, t: Throwable) {
                 d("Failure","${t.message}")
