@@ -79,8 +79,9 @@ class EventAdapter(val context: Context, var data: MutableList<ResponseAllEvents
                 val eventId=response.body()?.eventId.toString()
                 val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
 
-
+                // Treba da go prasas darko za ova so slikive sto tocno treba da se smeni
                 val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
+                d("ovde-img","$imageUrisString")
                 if (imageUrisString != null) {
                     var imageUris: ArrayList<Uri>
                      imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>

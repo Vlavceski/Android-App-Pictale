@@ -60,7 +60,6 @@ class MyEventsFragment : Fragment() {
                         rvEventsListMyEvent.adapter = EventAdapterMyEvents(requireContext(), apiData as MutableList<ResponseMyEvents>)
                     }
                     else{
-                        Log.d("in Response-->", "vleze")
                         empty_text.text = "Empty"
                     }
                 }

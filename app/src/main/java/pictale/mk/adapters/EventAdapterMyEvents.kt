@@ -1,6 +1,9 @@
 package pictale.mk.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import kotlinx.android.synthetic.main.item_event_layout.view.*
+import pictale.mk.DetailsActivity
 import pictale.mk.R
 import pictale.mk.auth.responses.ResponseMyEvents
+import pictale.mk.events.APIv2
+import pictale.mk.events.EventFile
+import pictale.mk.events.ResponseDetails
+import pictale.mk.events.RetrofitInstanceV2
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class EventAdapterMyEvents(val context: Context, var data: MutableList<ResponseMyEvents>):
     RecyclerView.Adapter<EventAdapterMyEvents.ViewHolder>() {
@@ -28,10 +39,10 @@ class EventAdapterMyEvents(val context: Context, var data: MutableList<ResponseM
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         data[position].let { holder.bindData(it) }
-//        val id = data[position].eventId
-//        holder.card.setOnClickListener {
-////             openDetails(id)
-//        }
+        val id = data[position].eventId
+        holder.card.setOnClickListener {
+             openDetails(id)
+        }
 
 
     }
@@ -52,40 +63,40 @@ class EventAdapterMyEvents(val context: Context, var data: MutableList<ResponseM
         }
     }
 
-//    private fun openDetails(id: String) {
-//        val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
-//        api.getDetails(id).enqueue(object :Callback<ResponseDetails>{
-//            override fun onResponse(
-//                call: Call<ResponseDetails>,
-//                response: Response<ResponseDetails>
-//            ) {
-//                d("Response-Det","${response.body()}")
-//                val name=response.body()?.name.toString()
-//                val location=response.body()?.location.toString()
-//                val eventId=response.body()?.eventId.toString()
-//                val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
-//
-//
-//                val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
-//                if (imageUrisString != null) {
-//                    var imageUris: ArrayList<Uri>
-//                     imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>
-//                    val intent = Intent(context, DetailsActivity::class.java)
-//                    intent.putExtra("name", name)
-//                    intent.putExtra("eventId", eventId)
-//                    intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
-//                    intent.putExtra("location", location)
-//                    context.startActivity(intent)
-//                 }
-//
-//
-//            }
-//
-//            override fun onFailure(call: Call<ResponseDetails>, t: Throwable) {
-//                d("Response-Det","${t.message}")
-//            }
-//        })
-//    }
+    private fun openDetails(id: String) {
+        val api = RetrofitInstanceV2.getRetrofitInstance().create(APIv2::class.java)
+        api.getDetails(id).enqueue(object : Callback<ResponseDetails> {
+            override fun onResponse(
+                call: Call<ResponseDetails>,
+                response: Response<ResponseDetails>
+            ) {
+                d("Response-Det","${response.body()}")
+                val name=response.body()?.name.toString()
+                val location=response.body()?.location.toString()
+                val eventId=response.body()?.eventId.toString()
+                val eventFilesList:List<EventFile> = response.body()?.eventFilesList!!
+
+
+                val imageUrisString = response.body()?.eventFilesList?.mapNotNull { it.urlLink }
+                if (imageUrisString != null) {
+                    var imageUris: ArrayList<Uri>
+                     imageUris = imageUrisString.map { Uri.parse(it) } as ArrayList<Uri>
+                    val intent = Intent(context, DetailsActivity::class.java)
+                    intent.putExtra("name", name)
+                    intent.putExtra("eventId", eventId)
+                    intent.putExtra("imageUrisString", imageUris as java.io.Serializable)
+                    intent.putExtra("location", location)
+                    context.startActivity(intent)
+                 }
+
+
+            }
+
+            override fun onFailure(call: Call<ResponseDetails>, t: Throwable) {
+                d("Response-Det","${t.message}")
+            }
+        })
+    }
 
 
 }
